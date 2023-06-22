@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: {{ .Values.global.source.repoURL }}
     path: {{ .Values.global.source.path }}/gateway
-    targetRevision: develop
+    targetRevision: {{ .Values.global.source.version }}
   syncPolicy:
     syncOptions:
     - CreateNamespace=false
