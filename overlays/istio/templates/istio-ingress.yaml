@@ -15,7 +15,7 @@ spec:
   sources:
   - chart: gateway
     repoURL: https://istio-release.storage.googleapis.com/charts
-    targetRevision: 1.17.3
+    targetRevision: 1.18.0
     helm:
       valueFiles:
         - $values/{{ .Values.global.source.path }}/files/values.yaml
