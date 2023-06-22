@@ -3,20 +3,28 @@ kind: Application
 metadata:
   name: istiod
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "{{ .Values.istio.base.sync_wave }}"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  annotations:
-    argocd.argoproj.io/sync-wave: "{{ .Values.istio.base_sync_wave }}"
 spec:
   destination:
-    namespace: istio-system
     name: {{ .Values.global.destination.name }}
+    namespace: istio-system
   project: {{ .Values.global.project }}
-  source:
+  sources:
+  - repoURL: https://istio-release.storage.googleapis.com/charts
     chart: istiod
-    repoURL: https://istio-release.storage.googleapis.com/charts
     targetRevision: 1.18.0
+    helm:
+      valueFiles:
+        - $values/{{ .Values.global.source.path }}/files/istiod-values.yaml
+  - repoURL: {{ .Values.global.source.repoURL }}
+    targetRevision: {{ .Values.global.source.version }}
+    ref: values
   syncPolicy:
+    syncOptions:
+    - CreateNamespace=false
     automated:
       prune: {{ .Values.global.syncPolicy.automated.prune }}
       selfHeal: {{ .Values.global.syncPolicy.automated.selfHeal }}

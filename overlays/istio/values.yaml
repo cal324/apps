@@ -9,10 +9,13 @@ global:
   syncPolicy:
     automated:
       prune: true
-      selfHeal: false
+      selfHeal: true
 
 istio:
-  base_sync_wave: 0
-  ingress_sync_wave: 1
-  gateway_sync_wave: 2
+  base:
+    sync_wave: 0
+  ingress:
+    sync_wave: 1
+  gateway:
+    sync_wave: 2
 

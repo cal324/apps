@@ -4,7 +4,7 @@ metadata:
   name: gateway
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "{{ .Values.istio.gateway_sync_wave }}"
+    argocd.argoproj.io/sync-wave: "{{ .Values.istio.gateway.sync_wave }}"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -12,10 +12,12 @@ spec:
     name: {{ .Values.global.destination.name }}
   project: {{ .Values.global.project }}
   source:
-    path: {{ .Values.global.source.path }}/gateway
-    targetRevision: {{ .Values.global.source.version }}
     repoURL: {{ .Values.global.source.repoURL }}
+    path: {{ .Values.global.source.path }}/gateway
+    targetRevision: develop
   syncPolicy:
+    syncOptions:
+    - CreateNamespace=false
     automated:
       prune: {{ .Values.global.syncPolicy.automated.prune }}
       selfHeal: {{ .Values.global.syncPolicy.automated.selfHeal }}
