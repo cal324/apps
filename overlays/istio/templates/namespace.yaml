@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-namespace
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "{{ .Values.istio.base_sync_wave }}"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: {{ .Values.global.destination.name }}
+  project: {{ .Values.global.project }}
+  source:
+    path: {{ .Values.global.source.path }}/namespace
+    targetRevision: {{ .Values.global.source.version }}
+    repoURL: {{ .Values.global.source.repoURL }}
+  syncPolicy:
+    automated:
+      prune: {{ .Values.global.syncPolicy.automated.prune }}
+      selfHeal: {{ .Values.global.syncPolicy.automated.selfHeal }}

@@ -1,0 +1,18 @@
+global:
+  project: default
+  destination:
+    name: in-cluster
+  source:
+    path: overlays/istio
+    version: develop
+    repoURL: https://github.com/cal324/apps.git
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+
+istio:
+  base_sync_wave: 0
+  ingress_sync_wave: 1
+  gateway_sync_wave: 2
+
