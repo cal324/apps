@@ -24,8 +24,7 @@ spec:
     targetRevision: develop
     ref: values
   syncPolicy:
-    syncOptions:
-    - CreateNamespace=false
+    syncOptions: 
     automated:
       prune: true
       selfHeal: true

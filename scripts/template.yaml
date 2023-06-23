@@ -25,16 +25,28 @@ spec:
   - repoURL: <%= global['source-repoURL'] %>
     targetRevision: <%= global['source-targetRevision'] %>
     ref: values
-<% else %>
+<% elsif param['type'] == 'kustomization' %>
   source:
     repoURL: <%= global['source-repoURL'] %>
     path: <%= param['source-path'] %>
     targetRevision: <%= global['source-targetRevision'] %>
+<% elsif param['type'] == 'crd' %>
+  source:
+    repoURL: <%= param['source-repoURL'] %>
+    path: <%= param['source-path'] %>
+    targetRevision: <%= param['source-targetRevision'] %>
 <% end %>
   syncPolicy:
     syncOptions:
 <% if param.key? 'syncPolicy-syncOptions-CreateNamespace' %>
     - CreateNamespace=<%= param['syncPolicy-syncOptions-CreateNamespace'] %>
+<% end %>
+<% if param.key? 'syncPolicy-syncOptions-Replace' %>
+    - Replace=<%= param['syncPolicy-syncOptions-Replace'] %>
+<% end %>
+<% if param.key? 'syncPolicy-directory-recurse' %>
+    directory:
+      recurse: <%= param['syncPolicy-directory-recurse'] %>
 <% end %>
     automated:
       prune: <%= common['syncPolicy-automated-prune'] %>

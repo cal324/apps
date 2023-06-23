@@ -2,24 +2,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istiod
+  name: prometheus
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: '0'
+    argocd.argoproj.io/sync-wave: '2'
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     name: in-cluster
-    namespace: istio-system
+    namespace: monitoring
   project: default
   sources:
-  - repoURL: https://istio-release.storage.googleapis.com/charts
-    chart: istiod
-    targetRevision: 1.18.0
+  - repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 46.4.1
     helm:
       valueFiles:
-      - "$values/overlays/istio/files/istiod.yaml"
+      - "$values/overlays/monitoring/files/prometheus.yaml"
   - repoURL: https://github.com/cal324/apps.git
     targetRevision: develop
     ref: values

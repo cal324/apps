@@ -1,0 +1,31 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: monitoring
+  namespace: default
+spec:
+  gateways:
+  - app-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - headers:
+        host:
+          prefix: az-prometheus
+    name: prometheus
+    route:
+    - destination:
+        host: prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local
+        port:
+          number: 9090
+  - match:
+    - headers:
+        host:
+          prefix: az-grafana
+    name: grafana
+    route:
+    - destination:
+        host: prometheus-grafana.monitoring.svc.cluster.local
+        port:
+          number: 80
