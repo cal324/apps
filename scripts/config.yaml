@@ -1,0 +1,26 @@
+
+istio-base:
+  env: istio-base.env
+  template: app_helm.yaml
+  output: overlays/istio/templates/istio-base.yaml
+
+istiod:
+  env: istiod.env
+  template: app_helm.yaml
+  output: overlays/istio/templates/istiod.yaml
+
+istio-ingress:
+  env: istio-ingress.env
+  template: app_helm.yaml
+  output: overlays/istio/templates/istio-ingress.yaml
+
+istio-namespace:
+  env: istio-namespace.env
+  template: app_kustomization_no_namespace.yaml
+  output: overlays/istio/templates/namespace.yaml
+
+istio-gateway:
+  env: istio-gateway.env
+  template: app_kustomization_no_namespace.yaml
+  output: overlays/istio/templates/gateway.yaml
+

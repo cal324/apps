@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: $NAME
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "{{ .Values.$SYNC_NAME.sync_wave }}"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: {{ .Values.global.destination.name }}
+  project: {{ .Values.global.project }}
+  source:
+    repoURL: {{ .Values.global.source.repoURL }}
+    path: {{ .Values.global.source.path }}/$REPO_PATH
+    targetRevision: {{ .Values.global.source.version }}
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=$CREATE_NAMESPACE
+    automated:
+      prune: {{ .Values.global.syncPolicy.automated.prune }}
+      selfHeal: {{ .Values.global.syncPolicy.automated.selfHeal }}
