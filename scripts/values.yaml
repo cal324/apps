@@ -1,0 +1,51 @@
+global:
+  project: default
+  destination-name: in-cluster
+  source-targetRevision: develop
+  source-repoURL: https://github.com/cal324/apps.git
+
+values:
+- istio:
+    common:
+      syncPolicy-automated-prune: true
+      syncPolicy-automated-selfHeal: true
+      path: overlays/istio
+
+    base:
+      type: helm
+      metadata-annotations-sync-wave: 0
+      destination-namespace: istio-system
+      source-repoURL: https://istio-release.storage.googleapis.com/charts
+      source-targetRevision: 1.18.0
+      source-chart: base
+      syncPolicy-syncOptions-CreateNamespace: true
+
+    istiod:
+      type: helm
+      metadata-annotations-sync-wave: 0
+      destination-namespace: istio-system
+      source-repoURL: https://istio-release.storage.googleapis.com/charts
+      source-targetRevision: 1.18.0
+      source-chart: istiod
+      syncPolicy-syncOptions-CreateNamespace: false
+
+    ingress:
+      type: helm
+      metadata-annotations-sync-wave: 1
+      destination-namespace: istio-ingress
+      source-repoURL: https://istio-release.storage.googleapis.com/charts
+      source-targetRevision: 1.18.0
+      source-chart: gateway
+      syncPolicy-syncOptions-CreateNamespace: false
+
+    namespace:
+      type: kustomization
+      metadata-annotations-sync-wave: 0
+      source-path: overlays/istio/namespace
+
+    gateway:
+      type: kustomization
+      metadata-annotations-sync-wave: 2
+      source-path: overlays/istio/gateway
+
+

@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istiod
+  name: base
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: 0
@@ -10,22 +10,22 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    name: istiod
+    name: base
     namespace: istio-system
   project: default
   sources:
   - repoURL: https://istio-release.storage.googleapis.com/charts
-    chart: istiod
+    chart: base
     targetRevision: 1.18.0
     helm:
       valueFiles:
-      - "$values/overlays/istio/files/istiod.yaml"
+      - "$values/overlays/istio/files/base.yaml"
   - repoURL: https://github.com/cal324/apps.git
     targetRevision: develop
     ref: values
   syncPolicy:
     syncOptions:
-    - CreateNamespace=false
+    - CreateNamespace=true
     automated:
       prune: true
       selfHeal: true

@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: <%= app_name %>
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: <%= param['metadata-annotations-sync-wave'] %>
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: <%= app_name %>
+<% if param.key? 'destination-namespace' %>
+    namespace: <%= param['destination-namespace'] %>
+<% end %>
+  project: <%= global['project'] %>
+<% if param['type'] == 'helm' %>
+  sources:
+  - repoURL: <%= param['source-repoURL'] %>
+    chart: <%= param['source-chart'] %>
+    targetRevision: <%= param['source-targetRevision'] %>
+    helm:
+      valueFiles:
+        - $values/<%= common['path'] %>/files/<%= app_name %>.yaml
+  - repoURL: <%= global['source-repoURL'] %>
+    targetRevision: <%= global['source-targetRevision'] %>
+    ref: values
+<% else %>
+  source:
+    repoURL: <%= global['source-repoURL'] %>
+    path: <%= param['source-path'] %>
+    targetRevision: <%= global['source-targetRevision'] %>
+<% end %>
+  syncPolicy:
+    syncOptions:
+<% if param.key? 'syncPolicy-syncOptions-CreateNamespace' %>
+    - CreateNamespace=<%= param['syncPolicy-syncOptions-CreateNamespace'] %>
+<% end %>
+    automated:
+      prune: <%= common['syncPolicy-automated-prune'] %>
+      selfHeal: <%= common['syncPolicy-automated-selfHeal'] %>

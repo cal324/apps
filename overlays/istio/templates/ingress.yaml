@@ -2,24 +2,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istiod
+  name: ingress
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: 0
+    argocd.argoproj.io/sync-wave: 1
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    name: istiod
-    namespace: istio-system
+    name: ingress
+    namespace: istio-ingress
   project: default
   sources:
   - repoURL: https://istio-release.storage.googleapis.com/charts
-    chart: istiod
+    chart: gateway
     targetRevision: 1.18.0
     helm:
       valueFiles:
-      - "$values/overlays/istio/files/istiod.yaml"
+      - "$values/overlays/istio/files/ingress.yaml"
   - repoURL: https://github.com/cal324/apps.git
     targetRevision: develop
     ref: values
