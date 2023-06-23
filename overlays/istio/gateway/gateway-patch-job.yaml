@@ -45,7 +45,7 @@ spec:
         command:
          - "bin/bash"
          - "-c"
-         - "kubectl patch service ingress -n istio-ingress -p '{\"spec\":{\"ports\":[{\"name\":\"http2\",\"nodePort\":30080,\"port\":80,\"protocol\":\"TCP\",\"targetPort\":80}]}}'"
+         - "kubectl patch service istio-ingress -n istio-ingress -p '{\"spec\":{\"ports\":[{\"name\":\"http2\",\"nodePort\":30080,\"port\":80,\"protocol\":\"TCP\",\"targetPort\":80}]}}'"
       restartPolicy: Never
 ---
 apiVersion: batch/v1
@@ -65,7 +65,7 @@ spec:
         command:
          - "bin/bash"
          - "-c"
-         - "kubectl patch service ingress -n istio-ingress -p '{\"spec\":{\"ports\":[{\"name\":\"https\",\"nodePort\":30443,\"port\":443,\"protocol\":\"TCP\",\"targetPort\":443}]}}'"
+         - "kubectl patch service istio-ingress -n istio-ingress -p '{\"spec\":{\"ports\":[{\"name\":\"https\",\"nodePort\":30443,\"port\":443,\"protocol\":\"TCP\",\"targetPort\":443}]}}'"
       restartPolicy: Never
 
 

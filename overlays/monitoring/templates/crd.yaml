@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: crd
+  name: monitoring-crd
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '1'
@@ -16,7 +16,7 @@ spec:
   source:
     repoURL: https://github.com/prometheus-community/helm-charts.git
     path: charts/kube-prometheus-stack/crds/
-    targetRevision: 46.4.1
+    targetRevision: kube-prometheus-stack-46.4.1
   syncPolicy:
     syncOptions:
     - Replace=true
