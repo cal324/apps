@@ -4,7 +4,7 @@ metadata:
   name: <%= app_name %>
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: <%= param['metadata-annotations-sync-wave'] %>
+    argocd.argoproj.io/sync-wave: '<%= param['metadata-annotations-sync-wave'] %>'
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
