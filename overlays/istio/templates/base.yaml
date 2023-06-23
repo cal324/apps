@@ -10,7 +10,7 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    name: base
+    name: in-cluster
     namespace: istio-system
   project: default
   sources:

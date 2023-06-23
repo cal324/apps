@@ -10,7 +10,7 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    name: gateway
+    name: in-cluster
   project: default
   source:
     repoURL: https://github.com/cal324/apps.git

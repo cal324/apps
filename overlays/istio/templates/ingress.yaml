@@ -10,7 +10,7 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    name: ingress
+    name: in-cluster
     namespace: istio-ingress
   project: default
   sources:
