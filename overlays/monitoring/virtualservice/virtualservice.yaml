@@ -16,7 +16,7 @@ spec:
     name: prometheus
     route:
     - destination:
-        host: prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local
+        host: monitoring-prometheus-kube-prometheus.monitoring.svc.cluster.local
         port:
           number: 9090
   - match:
@@ -26,6 +26,6 @@ spec:
     name: grafana
     route:
     - destination:
-        host: prometheus-grafana.monitoring.svc.cluster.local
+        host: monitoring-prometheus-grafana.monitoring.svc.cluster.local
         port:
           number: 80
