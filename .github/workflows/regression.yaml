@@ -1,0 +1,64 @@
+name: regression test
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+concurrency:
+  group: regression
+  cancel-in-progress: true
+
+jobs:
+  test:
+    permissions: { contents: read }
+    timeout-minutes: 20
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: install aqua
+        run: |
+          curl -sSfL -O https://raw.githubusercontent.com/aquaproj/aqua-installer/v2.1.1/aqua-installer
+          echo "c2af02bdd15da6794f9c98db40332c804224930212f553a805425441f8331665  aqua-installer" | sha256sum -c
+          chmod +x aqua-installer
+          ./aqua-installer
+          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+          export AQUA_GLOBAL_CONFIG=./test/aqua.yaml
+          aqua i -l
+      - name: create kind cluster
+        run: |
+          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+          kind create cluster --config=./test/kind_config.yaml
+      - name: install argocd
+        run: |
+          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+          kustomize build https://github.com/cal324/apps/base/argocd/?ref=HEAD | kubectl apply -n argocd -f -
+          kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-server --for condition=Ready --timeout=300s
+          kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-dex-server --for condition=Ready --timeout=300s
+          kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-repo-server --for condition=Ready --timeout=300s
+      - name: install istio
+        run: |
+          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+          kubectl apply -f ./test/manifests/istio.yaml
+      - name: install monitoring
+        run: |
+          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+          kubectl apply -f ./test/manifests/monitoring.yaml
+      - name: check
+        run: |
+          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+          ./test/check_monit.sh
+          for i in istio istio-namespace istio-base istio-istiod istio-ingress istio-gateway
+          do
+            kubectl wait app -n argocd $i --for=jsonpath='{status.health.status}'=Healthy
+          done
+          for i in monitoring monitoring-namespace monitoring-crd monitoring-prometheus monitoring-loki monitoring-virtualservice
+          do
+            kubectl wait app -n argocd $i --for=jsonpath='{status.health.status}'=Healthy
+          done
+          kubectl get po -A
+          kubectl get app -A
+          kubectl get svc -A
+          kubectl get ep -A
+          kubectl get pv -A
+
