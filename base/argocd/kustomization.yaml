@@ -2,51 +2,51 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- https://raw.githubusercontent.com/argoproj/argo-cd/v2.7.6/manifests/install.yaml
-- namespace.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v2.7.6/manifests/install.yaml
+  - namespace.yaml
 
 patches:
-- target:
-    kind: Service
-    name: argocd-server
-  patch: |-
-    apiVersion: v1
-    kind: Service
-    metadata:
+  - target:
+      kind: Service
       name: argocd-server
-    spec:
-      type: NodePort
-      ports:
-      - name: http
-        port: 80
-        protocol: TCP
-        targetPort: 8080
-      - name: https
-        port: 443
-        protocol: TCP
-        targetPort: 8080
-        nodePort: 30000
-- target:
-    kind: ConfigMap
-    name: argocd-cm
-  patch: |-
-    apiVersion: v1
-    kind: ConfigMap
-    metadata:
+    patch: |-
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: argocd-server
+      spec:
+        type: NodePort
+        ports:
+        - name: http
+          port: 80
+          protocol: TCP
+          targetPort: 8080
+        - name: https
+          port: 443
+          protocol: TCP
+          targetPort: 8080
+          nodePort: 30000
+  - target:
+      kind: ConfigMap
       name: argocd-cm
-    data:
-      resource.customizations: |
-        argoproj.io/Application:
-          health.lua: |
-            hs = {}
-            hs.status = "Progressing"
-            hs.message = ""
-            if obj.status ~= nil then
-              if obj.status.health ~= nil then
-                hs.status = obj.status.health.status
-                if obj.status.health.message ~= nil then
-                  hs.message = obj.status.health.message
+    patch: |-
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: argocd-cm
+      data:
+        resource.customizations: |
+          argoproj.io/Application:
+            health.lua: |
+              hs = {}
+              hs.status = "Progressing"
+              hs.message = ""
+              if obj.status ~= nil then
+                if obj.status.health ~= nil then
+                  hs.status = obj.status.health.status
+                  if obj.status.health.message ~= nil then
+                    hs.message = obj.status.health.message
+                  end
                 end
               end
-            end
-            return hs
+              return hs

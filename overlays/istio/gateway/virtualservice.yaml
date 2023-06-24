@@ -5,16 +5,16 @@ metadata:
   namespace: default
 spec:
   gateways:
-  - app-gateway
+    - app-gateway
   hosts:
-  - '*'
+    - "*"
   tls:
-  - match:
-      - port: 443
-        sniHosts:
-          - az-argocd
-    route:
-    - destination:
-        host: argocd-server.argocd.svc.cluster.local
-        port:
-          number: 443
+    - match:
+        - port: 443
+          sniHosts:
+            - az-argocd
+      route:
+        - destination:
+            host: argocd-server.argocd.svc.cluster.local
+            port:
+              number: 443

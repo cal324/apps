@@ -5,27 +5,27 @@ metadata:
   namespace: default
 spec:
   gateways:
-  - app-gateway
+    - app-gateway
   hosts:
-  - '*'
+    - "*"
   http:
-  - match:
-    - headers:
-        host:
-          prefix: az-prometheus
-    name: prometheus
-    route:
-    - destination:
-        host: monitoring-prometheus-kube-prometheus.monitoring.svc.cluster.local
-        port:
-          number: 9090
-  - match:
-    - headers:
-        host:
-          prefix: az-grafana
-    name: grafana
-    route:
-    - destination:
-        host: monitoring-prometheus-grafana.monitoring.svc.cluster.local
-        port:
-          number: 80
+    - match:
+        - headers:
+            host:
+              prefix: az-prometheus
+      name: prometheus
+      route:
+        - destination:
+            host: monitoring-prometheus-kube-prometheus.monitoring.svc.cluster.local
+            port:
+              number: 9090
+    - match:
+        - headers:
+            host:
+              prefix: az-grafana
+      name: grafana
+      route:
+        - destination:
+            host: monitoring-prometheus-grafana.monitoring.svc.cluster.local
+            port:
+              number: 80

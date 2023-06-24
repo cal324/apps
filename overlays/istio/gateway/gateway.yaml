@@ -7,17 +7,17 @@ spec:
   selector:
     istio: ingress
   servers:
-  - hosts:
-    - '*'
-    port:
-      name: http
-      number: 80
-      protocol: HTTP
-  - hosts:
-    - '*'
-    port:
-      name: https
-      number: 443
-      protocol: HTTPS
-    tls:
-      mode: PASSTHROUGH
+    - hosts:
+        - "*"
+      port:
+        name: http
+        number: 80
+        protocol: HTTP
+    - hosts:
+        - "*"
+      port:
+        name: https
+        number: 443
+        protocol: HTTPS
+      tls:
+        mode: PASSTHROUGH

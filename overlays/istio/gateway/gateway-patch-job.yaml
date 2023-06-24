@@ -12,7 +12,7 @@ metadata:
 rules:
   - apiGroups: [""]
     resources: ["services"]
-    verbs: ["get","list","patch"]
+    verbs: ["get", "list", "patch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -40,12 +40,12 @@ spec:
     spec:
       serviceAccountName: istio-setup-sa
       containers:
-      - name: tester
-        image: bitnami/kubectl
-        command:
-         - "bin/bash"
-         - "-c"
-         - "kubectl patch service istio-ingress -n istio-ingress -p '{\"spec\":{\"ports\":[{\"name\":\"http2\",\"nodePort\":30080,\"port\":80,\"protocol\":\"TCP\",\"targetPort\":80}]}}'"
+        - name: tester
+          image: bitnami/kubectl
+          command:
+            - "bin/bash"
+            - "-c"
+            - 'kubectl patch service istio-ingress -n istio-ingress -p ''{"spec":{"ports":[{"name":"http2","nodePort":30080,"port":80,"protocol":"TCP","targetPort":80}]}}'''
       restartPolicy: Never
 ---
 apiVersion: batch/v1
@@ -60,12 +60,10 @@ spec:
     spec:
       serviceAccountName: istio-setup-sa
       containers:
-      - name: tester
-        image: bitnami/kubectl
-        command:
-         - "bin/bash"
-         - "-c"
-         - "kubectl patch service istio-ingress -n istio-ingress -p '{\"spec\":{\"ports\":[{\"name\":\"https\",\"nodePort\":30443,\"port\":443,\"protocol\":\"TCP\",\"targetPort\":443}]}}'"
+        - name: tester
+          image: bitnami/kubectl
+          command:
+            - "bin/bash"
+            - "-c"
+            - 'kubectl patch service istio-ingress -n istio-ingress -p ''{"spec":{"ports":[{"name":"https","nodePort":30443,"port":443,"protocol":"TCP","targetPort":443}]}}'''
       restartPolicy: Never
-
-

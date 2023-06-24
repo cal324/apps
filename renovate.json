@@ -10,7 +10,9 @@
     "regex"
   ],
   "argocd": {
-    "fileMatch": ["\\.yaml$"]
+    "fileMatch": [
+      "\\.yaml$"
+    ]
   },
   "regexManagers": [
     {
