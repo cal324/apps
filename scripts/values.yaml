@@ -75,7 +75,7 @@ values:
         metadata-annotations-sync-wave: 3
         destination-namespace: monitoring
         source-repoURL: https://grafana.github.io/helm-charts
-        source-targetRevision: 5.6.1
+        source-targetRevision: 5.8.4
         source-chart: loki
 
       namespace:
