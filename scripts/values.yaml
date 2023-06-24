@@ -58,7 +58,7 @@ values:
         destination-namespace: monitoring
         source-repoURL: https://github.com/prometheus-community/helm-charts.git
         source-path: charts/kube-prometheus-stack/crds/
-        source-targetRevision: kube-prometheus-stack-46.8.0
+        source-targetRevision: kube-prometheus-stack-47.0.0
         syncPolicy-syncOptions-Replace: true
         syncPolicy-directory-recurse: true
 
@@ -67,7 +67,7 @@ values:
         metadata-annotations-sync-wave: 2
         destination-namespace: monitoring
         source-repoURL: https://prometheus-community.github.io/helm-charts
-        source-targetRevision: 46.8.0
+        source-targetRevision: 47.0.0
         source-chart: kube-prometheus-stack
 
       loki:
