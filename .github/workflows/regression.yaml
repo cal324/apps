@@ -1,4 +1,4 @@
-name: regression test
+name: regression
 
 on:
   push:
@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  regression-test:
+  regression:
     permissions: { contents: read }
     timeout-minutes: 20
     runs-on: ubuntu-22.04
@@ -23,12 +23,12 @@ jobs:
           chmod +x aqua-installer
           ./aqua-installer
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          export AQUA_GLOBAL_CONFIG=./test/aqua.yaml
+          export AQUA_GLOBAL_CONFIG=./spec/aqua.yaml
           aqua i -l
       - name: create kind cluster
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          kind create cluster --config=./test/kind_config.yaml
+          kind create cluster --config=./spec/kind_config.yaml
       - name: install argocd
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
@@ -39,15 +39,15 @@ jobs:
       - name: install istio
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          kubectl apply -f ./test/manifests/istio.yaml
+          kubectl apply -f ./spec/manifests/istio.yaml
       - name: install monitoring
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          kubectl apply -f ./test/manifests/monitoring.yaml
+          kubectl apply -f ./spec/manifests/monitoring.yaml
       - name: check
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          ./test/check_monit.sh
+          ./spec/check_monit.sh
           for i in istio istio-namespace istio-base istio-istiod istio-ingress istio-gateway
           do
             kubectl wait app -n argocd $i --for=jsonpath='{status.health.status}'=Healthy
