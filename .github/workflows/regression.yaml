@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  regression-test:
     permissions: { contents: read }
     timeout-minutes: 20
     runs-on: ubuntu-22.04
@@ -61,4 +61,3 @@ jobs:
           kubectl get svc -A
           kubectl get ep -A
           kubectl get pv -A
-
