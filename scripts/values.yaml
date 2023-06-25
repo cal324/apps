@@ -102,6 +102,7 @@ values:
       dummy:
         type: kustomization
         metadata-annotations-sync-wave: 0
+        destination-namespace: default
         source-path: overlays/fluent-aggregator/dummy
 
       fluentd:

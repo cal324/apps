@@ -11,6 +11,7 @@ metadata:
 spec:
   destination:
     name: in-cluster
+    namespace: default
   project: default
   source:
     repoURL: https://github.com/cal324/apps.git
