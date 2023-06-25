@@ -6,5 +6,6 @@ do
     break
   fi
   sleep 5
+  kubectl get apps -A
 done
 
