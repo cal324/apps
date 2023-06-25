@@ -386,7 +386,7 @@ config:
     [OUTPUT]
         Name forward
         Match *
-        Host fluentd.logging.svc
+        Host fluent-aggregator-fluentd.logging.svc
         Port 24224
 
   ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/upstream-servers

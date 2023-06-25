@@ -276,12 +276,13 @@ dashboards:
 
 ## Fluentd list of plugins to install
 ##
-plugins: []
+plugins: 
+  - fluent-plugin-grafana-loki
 # - fluent-plugin-out-http
 
 ## Add fluentd config files from K8s configMaps
 ##
-configMapConfigs: 
+configMapConfigs:
   - fluentd-prometheus-conf
 #  - fluentd-systemd-conf
 
@@ -305,12 +306,11 @@ fileConfigs:
 
   04_outputs.conf: |-
     <match **>
-      @type forward
-      <server>
-        name send
-        host stab.default.svc
-        port 24224
-      </server>
+      @type loki
+      url http://loki-gateway.monitoring.svc
+      extra_labels {"env":"dev"}
+      flush_interval 10s
+      flush_at_shutdown true
+      buffer_chunk_limit 1m
     </match>
-
 
