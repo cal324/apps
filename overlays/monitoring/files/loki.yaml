@@ -7,7 +7,7 @@ loki:
 monitoring:
   serviceMonitor:
     labels: 
-      release: prometheus
+      release: monitoring-prometheus
 write:
   replicas: 1
 read:
