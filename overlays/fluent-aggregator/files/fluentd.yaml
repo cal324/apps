@@ -214,7 +214,7 @@ metrics:
   serviceMonitor:
     enabled: true
     additionalLabels:
-      release: prometheus
+      release: monitoring-prometheus
     namespace: "monitoring"
     namespaceSelector: {}
     ## metric relabel configs to apply to samples before ingestion.

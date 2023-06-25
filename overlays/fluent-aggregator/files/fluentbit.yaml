@@ -103,7 +103,7 @@ serviceMonitor:
   scrapeTimeout: 10s
   jobLabel: fluentbit
   selector:
-    release: prometheus
+    release: monitoring-prometheus
 #  ## metric relabel configs to apply to samples before ingestion.
 #  ##
 #  metricRelabelings:
