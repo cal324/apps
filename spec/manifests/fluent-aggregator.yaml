@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istio
+  name: fluent-aggregator
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/cal324/apps.git
     targetRevision: develop
-    path: overlays/istio
+    path: overlays/fluent-aggregator
   destination:
     name: in-cluster
   syncPolicy:
