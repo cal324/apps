@@ -1,0 +1,30 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fluent-aggregator-fluentbit
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: in-cluster
+    namespace: logging
+  project: default
+  sources:
+  - repoURL: https://fluent.github.io/helm-charts
+    chart: fluent-bit
+    targetRevision: 0.30.3
+    helm:
+      valueFiles:
+      - "$values/overlays/fluent-aggregator/files/fluentbit.yaml"
+  - repoURL: https://github.com/cal324/apps.git
+    targetRevision: develop
+    ref: values
+  syncPolicy:
+    syncOptions: 
+    automated:
+      prune: true
+      selfHeal: true

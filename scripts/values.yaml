@@ -87,3 +87,39 @@ values:
         type: kustomization
         metadata-annotations-sync-wave: 3
         source-path: overlays/monitoring/virtualservice
+
+  - fluent-aggregator:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/fluent-aggregator
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 0
+        source-path: overlays/fluent-aggregator/namespace
+
+      dummy:
+        type: kustomization
+        metadata-annotations-sync-wave: 0
+        source-path: overlays/fluent-aggregator/dummy
+
+      fluentd:
+        type: helm
+        metadata-annotations-sync-wave: 1
+        destination-namespace: logging
+        source-repoURL: https://fluent.github.io/helm-charts
+        source-targetRevision: 0.4.3
+        source-chart: fluentd
+
+      fluentbit:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: logging
+        source-repoURL: https://fluent.github.io/helm-charts
+        source-targetRevision: 0.30.3
+        source-chart: fluent-bit
+
+
+
+

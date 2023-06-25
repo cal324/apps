@@ -1,0 +1,23 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fluent-aggregator-namespace
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '0'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: in-cluster
+  project: default
+  source:
+    repoURL: https://github.com/cal324/apps.git
+    path: overlays/fluent-aggregator/namespace
+    targetRevision: develop
+  syncPolicy:
+    syncOptions: 
+    automated:
+      prune: true
+      selfHeal: true
