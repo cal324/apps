@@ -10,9 +10,9 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    name: in-cluster
+    name: "{{ .Values.destination.name }}"
     namespace: monitoring
-  project: default
+  project: "{{ .Values.project }}"
   source:
     repoURL: https://github.com/prometheus-community/helm-charts.git
     path: charts/kube-prometheus-stack/crds/

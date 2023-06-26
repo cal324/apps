@@ -11,6 +11,10 @@ spec:
     repoURL: https://github.com/cal324/apps.git
     targetRevision: develop
     path: overlays/fluent-aggregator
+    helm:
+      parameters:
+        - name: source.targetRevision
+          value: develop
   destination:
     name: in-cluster
   syncPolicy:

@@ -10,12 +10,12 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    name: in-cluster
-  project: default
+    name: "{{ .Values.destination.name }}"
+  project: "{{ .Values.project }}"
   source:
-    repoURL: https://github.com/cal324/apps.git
+    repoURL: "{{ .Values.source.repoURL }}"
     path: overlays/istio/namespace
-    targetRevision: develop
+    targetRevision: "{{ .Values.source.targetRevision }}"
   syncPolicy:
     syncOptions: 
     automated:

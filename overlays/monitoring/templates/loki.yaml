@@ -10,9 +10,9 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    name: in-cluster
+    name: "{{ .Values.destination.name }}"
     namespace: monitoring
-  project: default
+  project: "{{ .Values.project }}"
   sources:
   - repoURL: https://grafana.github.io/helm-charts
     chart: loki
@@ -20,8 +20,8 @@ spec:
     helm:
       valueFiles:
       - "$values/overlays/monitoring/files/loki.yaml"
-  - repoURL: https://github.com/cal324/apps.git
-    targetRevision: develop
+  - repoURL: "{{ .Values.source.repoURL }}"
+    targetRevision: "{{ .Values.source.targetRevision }}"
     ref: values
   syncPolicy:
     syncOptions: 

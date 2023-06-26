@@ -14,7 +14,11 @@ config['values'].each do |value|
     app_name, param = params[0], params[1]
     if app_name != 'common'
       yaml = ERB.new(File.read(TEMPLATE_FILE)).result(binding)
-      YAML.dump(YAML.load(yaml), File.open("../#{common['path']}/templates/#{app_name}.yaml", 'w'))
+      if group == 'lab'
+        YAML.dump(YAML.load(yaml), File.open("../sample/lab/templates/#{app_name}.yaml", 'w'))
+      else
+        YAML.dump(YAML.load(yaml), File.open("../#{common['path']}/templates/#{app_name}.yaml", 'w'))
+      end
     end
   end
 end

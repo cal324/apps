@@ -9,11 +9,11 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    name: <%= global['destination-name'] %>
+    name: "<%= '{{' %> <%= global['destination-name'] %> <%= '}}' %>"
 <% if param.key? 'destination-namespace' %>
     namespace: <%= param['destination-namespace'] %>
 <% end %>
-  project: <%= global['project'] %>
+  project: "<%= '{{' %> <%= global['project'] %> <%= '}}' %>"
 <% if param['type'] == 'helm' %>
   sources:
   - repoURL: <%= param['source-repoURL'] %>
@@ -22,14 +22,14 @@ spec:
     helm:
       valueFiles:
         - $values/<%= common['path'] %>/files/<%= app_name %>.yaml
-  - repoURL: <%= global['source-repoURL'] %>
-    targetRevision: <%= global['source-targetRevision'] %>
+  - repoURL: "<%= '{{' %> <%= global['source-repoURL'] %> <%= '}}' %>"
+    targetRevision: "<%= '{{' %> <%= global['source-targetRevision'] %> <%= '}}' %>"
     ref: values
 <% elsif param['type'] == 'kustomization' %>
   source:
-    repoURL: <%= global['source-repoURL'] %>
+    repoURL: "<%= '{{' %> <%= global['source-repoURL'] %> <%= '}}' %>"
     path: <%= param['source-path'] %>
-    targetRevision: <%= global['source-targetRevision'] %>
+    targetRevision: "<%= '{{' %> <%= global['source-targetRevision'] %> <%= '}}' %>"
 <% elsif param['type'] == 'crd' %>
   source:
     repoURL: <%= param['source-repoURL'] %>

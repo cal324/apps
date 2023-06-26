@@ -2,27 +2,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istio-ingress
+  name: lab-monitoring
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: '1'
+    argocd.argoproj.io/sync-wave: '0'
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: istio-ingress
   project: "{{ .Values.project }}"
-  sources:
-  - repoURL: https://istio-release.storage.googleapis.com/charts
-    chart: gateway
-    targetRevision: 1.18.0
-    helm:
-      valueFiles:
-      - "$values/overlays/istio/files/ingress.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
+  source:
+    repoURL: "{{ .Values.source.repoURL }}"
+    path: overlays/monitoring
     targetRevision: "{{ .Values.source.targetRevision }}"
-    ref: values
   syncPolicy:
     syncOptions: 
     automated:

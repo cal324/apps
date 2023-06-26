@@ -10,9 +10,9 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    name: in-cluster
+    name: "{{ .Values.destination.name }}"
     namespace: logging
-  project: default
+  project: "{{ .Values.project }}"
   sources:
   - repoURL: https://fluent.github.io/helm-charts
     chart: fluent-bit
@@ -20,8 +20,8 @@ spec:
     helm:
       valueFiles:
       - "$values/overlays/fluent-aggregator/files/fluentbit.yaml"
-  - repoURL: https://github.com/cal324/apps.git
-    targetRevision: develop
+  - repoURL: "{{ .Values.source.repoURL }}"
+    targetRevision: "{{ .Values.source.targetRevision }}"
     ref: values
   syncPolicy:
     syncOptions: 
