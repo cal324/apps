@@ -16,6 +16,10 @@ spec:
     repoURL: "{{ .Values.source.repoURL }}"
     path: overlays/monitoring
     targetRevision: "{{ .Values.source.targetRevision }}"
+    helm:
+      parameters:
+      - name: source.targetRevision
+        value: "{{ .Values.source.targetRevision }}"
   syncPolicy:
     syncOptions: 
     automated:

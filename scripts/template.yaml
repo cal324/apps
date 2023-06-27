@@ -30,6 +30,12 @@ spec:
     repoURL: "<%= '{{' %> <%= global['source-repoURL'] %> <%= '}}' %>"
     path: <%= param['source-path'] %>
     targetRevision: "<%= '{{' %> <%= global['source-targetRevision'] %> <%= '}}' %>"
+<% if param.key? 'source-helm-parameters-source-targetRevision' %>
+    helm:
+      parameters:
+        - name: source.targetRevision
+          value: "<%= '{{' %> <%= global['source-targetRevision'] %> <%= '}}' %>"
+<% end %>
 <% elsif param['type'] == 'crd' %>
   source:
     repoURL: <%= param['source-repoURL'] %>
