@@ -17,6 +17,11 @@ for i in monitoring monitoring-namespace monitoring-crd monitoring-prometheus mo
 do
   kubectl wait app -n argocd $i --for=jsonpath='{status.health.status}'=Healthy
 done
+for i in fluent-aggregator fluent-aggregator-dummy fluent-aggregator-namespace fluent-aggregator-fluentd
+do
+  kubectl wait app -n argocd $i --for=jsonpath='{status.health.status}'=Healthy
+done
+
 
 echo "kubectl get po -A"
 kubectl get po -A

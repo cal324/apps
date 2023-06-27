@@ -36,20 +36,8 @@ jobs:
           kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-server --for condition=Ready --timeout=300s
           kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-dex-server --for condition=Ready --timeout=300s
           kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-repo-server --for condition=Ready --timeout=300s
-      - name: install istio
+      - name: install argo apps
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          kubectl apply -f ./spec/manifests/istio.yaml
-      - name: install monitoring
-        run: |
-          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          kubectl apply -f ./spec/manifests/monitoring.yaml
-      - name: check
-        run: |
-          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+          kubectl apply -f ./spec/manifests/develop.yaml
           ./spec/check_monit.sh
-      - name: install fluent
-        run: |
-          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          kubectl apply -f ./spec/manifests/fluent-aggregator.yaml
-          ./spec/check_fluent.sh
