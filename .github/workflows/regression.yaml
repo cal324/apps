@@ -40,4 +40,4 @@ jobs:
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
           kubectl apply -f ./spec/manifests/develop.yaml
-          ./spec/check_monit.sh
+          ./spec/check_state

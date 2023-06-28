@@ -1,0 +1,26 @@
+function check_app_status(){
+  kubectl wait app -n argocd $i --for=jsonpath='{status.health.status}'=Healthy
+}
+
+function check_all_app_status(){
+  for i in `kubectl get apps -A -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'`
+  do
+    check_app_status $i
+  done
+}
+
+function check_pod_cond(){
+  while true
+  do
+    result=$(kubectl get po -n $1 $2)
+    if [ $? -eq 0 ]; then
+      kubectl wait po -n $1 $2 --for condition=Ready --timeout=300s
+      break
+    fi
+    sleep 5
+    kubectl get apps -A
+  done
+}
+
+check_pod_cond monitoring monitoring-loki-0
+check_all_app_status
