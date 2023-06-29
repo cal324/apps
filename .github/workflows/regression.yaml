@@ -37,7 +37,10 @@ jobs:
           kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-dex-server --for condition=Ready --timeout=300s
           kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-repo-server --for condition=Ready --timeout=300s
       - name: install argo apps
+        env:
+          ENV: ${{ github.ref_name }}
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          kubectl apply -f ./spec/manifests/develop.yaml
+          sed "s@REPLACE_ME@$ENV@" ./spec/manifests/template.yaml > env.yaml
+          kubectl apply -f env.yaml
           ./spec/check_state
