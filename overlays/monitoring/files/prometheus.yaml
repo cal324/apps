@@ -18,4 +18,3 @@ prometheus:
           resources:
             requests:
               storage: 50Gi
-        selector: {}
