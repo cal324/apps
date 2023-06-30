@@ -36,11 +36,6 @@ spec:
         - name: source.targetRevision
           value: "<%= '{{' %> <%= global['source-targetRevision'] %> <%= '}}' %>"
 <% end %>
-<% elsif param['type'] == 'crd' %>
-  source:
-    repoURL: <%= param['source-repoURL'] %>
-    path: <%= param['source-path'] %>
-    targetRevision: <%= param['source-targetRevision'] %>
 <% end %>
   syncPolicy:
     syncOptions:

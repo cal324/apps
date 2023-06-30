@@ -72,25 +72,17 @@ values:
         syncPolicy-automated-selfHeal: true
         path: overlays/monitoring
 
-      crd:
-        type: crd
-        metadata-annotations-sync-wave: 1
-        destination-namespace: monitoring
-        source-repoURL: https://github.com/prometheus-community/helm-charts.git
-        source-path: charts/kube-prometheus-stack/crds/
-        syncPolicy-syncOptions-Replace: true
-        syncPolicy-directory-recurse: true
-
       prometheus:
         type: helm
-        metadata-annotations-sync-wave: 2
+        metadata-annotations-sync-wave: 1
         destination-namespace: monitoring
         source-repoURL: https://prometheus-community.github.io/helm-charts
         source-chart: kube-prometheus-stack
+        syncPolicy-syncOptions-ServerSideApply: true
 
       loki:
         type: helm
-        metadata-annotations-sync-wave: 3
+        metadata-annotations-sync-wave: 2
         destination-namespace: monitoring
         source-repoURL: https://grafana.github.io/helm-charts
         source-chart: loki
@@ -103,7 +95,7 @@ values:
 
       virtualservice:
         type: kustomization
-        metadata-annotations-sync-wave: 3
+        metadata-annotations-sync-wave: 2
         source-path: overlays/monitoring/virtualservice
 
   - fluent-aggregator:
