@@ -94,6 +94,7 @@ values:
         destination-namespace: monitoring
         source-repoURL: https://grafana.github.io/helm-charts
         source-chart: loki
+        syncPolicy-syncOptions-ServerSideApply: true
 
       namespace:
         type: kustomization

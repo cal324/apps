@@ -24,7 +24,8 @@ spec:
     targetRevision: "{{ .Values.source.targetRevision }}"
     ref: values
   syncPolicy:
-    syncOptions: 
+    syncOptions:
+    - ServerSideApply=true
     automated:
       prune: true
       selfHeal: true
