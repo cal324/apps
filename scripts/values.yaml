@@ -39,7 +39,6 @@ values:
         metadata-annotations-sync-wave: 0
         destination-namespace: istio-system
         source-repoURL: https://istio-release.storage.googleapis.com/charts
-        source-targetRevision: 1.18.0
         source-chart: base
         syncPolicy-syncOptions-CreateNamespace: true
 
@@ -48,7 +47,6 @@ values:
         metadata-annotations-sync-wave: 0
         destination-namespace: istio-system
         source-repoURL: https://istio-release.storage.googleapis.com/charts
-        source-targetRevision: 1.18.0
         source-chart: istiod
 
       ingress:
@@ -56,7 +54,6 @@ values:
         metadata-annotations-sync-wave: 1
         destination-namespace: istio-ingress
         source-repoURL: https://istio-release.storage.googleapis.com/charts
-        source-targetRevision: 1.18.0
         source-chart: gateway
 
       namespace:
@@ -81,7 +78,6 @@ values:
         destination-namespace: monitoring
         source-repoURL: https://github.com/prometheus-community/helm-charts.git
         source-path: charts/kube-prometheus-stack/crds/
-        source-targetRevision: kube-prometheus-stack-47.0.0
         syncPolicy-syncOptions-Replace: true
         syncPolicy-directory-recurse: true
 
@@ -90,7 +86,6 @@ values:
         metadata-annotations-sync-wave: 2
         destination-namespace: monitoring
         source-repoURL: https://prometheus-community.github.io/helm-charts
-        source-targetRevision: 47.0.0
         source-chart: kube-prometheus-stack
 
       loki:
@@ -98,7 +93,6 @@ values:
         metadata-annotations-sync-wave: 3
         destination-namespace: monitoring
         source-repoURL: https://grafana.github.io/helm-charts
-        source-targetRevision: 5.8.4
         source-chart: loki
 
       namespace:
@@ -133,7 +127,6 @@ values:
         metadata-annotations-sync-wave: 1
         destination-namespace: logging
         source-repoURL: https://fluent.github.io/helm-charts
-        source-targetRevision: 0.4.3
         source-chart: fluentd
 
       fluentbit:
@@ -141,9 +134,4 @@ values:
         metadata-annotations-sync-wave: 2
         destination-namespace: logging
         source-repoURL: https://fluent.github.io/helm-charts
-        source-targetRevision: 0.34.0
         source-chart: fluent-bit
-
-
-
-
