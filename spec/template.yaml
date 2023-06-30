@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring
+  name: develop-apps
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -9,12 +9,12 @@ spec:
   project: default
   source:
     repoURL: https://github.com/cal324/apps.git
-    targetRevision: develop
-    path: overlays/monitoring
+    targetRevision: REPLACE_ME
+    path: overlays/development
     helm:
       parameters:
         - name: source.targetRevision
-          value: develop
+          value: REPLACE_ME
   destination:
     name: in-cluster
   syncPolicy:

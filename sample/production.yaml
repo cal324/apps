@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fluent-aggregator
+  name: production-apps
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -9,12 +9,12 @@ spec:
   project: default
   source:
     repoURL: https://github.com/cal324/apps.git
-    targetRevision: develop
-    path: overlays/fluent-aggregator
+    targetRevision: main
+    path: overlays/development
     helm:
       parameters:
         - name: source.targetRevision
-          value: develop
+          value: main
   destination:
     name: in-cluster
   syncPolicy:

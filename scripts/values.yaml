@@ -5,7 +5,7 @@ global:
   source-repoURL: .Values.source.repoURL
 
 values:
-  - lab:
+  - development:
       common:
         syncPolicy-automated-prune: true
         syncPolicy-automated-selfHeal: true

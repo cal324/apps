@@ -20,7 +20,7 @@ function check_resource_status(){
 }
 
 function check_all_app_status(){
-  for i in lab-istio lab-monitoring lab-fluent-aggregator
+  for i in istio monitoring fluent-aggregator
   do
     for j in `kubectl get app -n argocd $i -o json | jq -r ".status.resources[]|.name"`
     do

@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: lab-istio
+  name: monitoring
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '0'
@@ -14,7 +14,7 @@ spec:
   project: "{{ .Values.project }}"
   source:
     repoURL: "{{ .Values.source.repoURL }}"
-    path: overlays/istio
+    path: overlays/monitoring
     targetRevision: "{{ .Values.source.targetRevision }}"
     helm:
       parameters:

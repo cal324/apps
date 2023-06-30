@@ -46,6 +46,6 @@ jobs:
           ENV: ${{ github.ref_name }}
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          sed "s@REPLACE_ME@$ENV@" ./spec/manifests/template.yaml > env.yaml
+          sed "s@REPLACE_ME@$ENV@" ./spec/template.yaml > env.yaml
           kubectl apply -f env.yaml
           ./spec/check_state
