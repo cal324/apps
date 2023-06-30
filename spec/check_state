@@ -1,26 +1,33 @@
-function check_app_status(){
-  kubectl wait app -n argocd $i --for=jsonpath='{status.health.status}'=Healthy
+function check_resource_status(){
+  RESOURCE_NAME=$1
+
+  kubectl get apps -A > check.log
+  while true
+  do
+    result=$(kubectl get apps -n argocd $RESOURCE_NAME)
+    if [ $? -eq 0 ]; then
+      kubectl wait apps -n argocd $RESOURCE_NAME --for jsonpath='{status.health.status}'=Healthy --timeout=600s
+      if [ $? -ne 0 ]; then
+        exit 1
+      fi
+      break
+    fi
+    sleep 10
+    kubectl get apps -A > current.log
+    diff check.log current.log
+    mv current.log check.log
+  done
 }
 
 function check_all_app_status(){
-  for i in `kubectl get apps -A -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'`
+  for i in lab-istio lab-monitoring lab-fluent-aggregator
   do
-    check_app_status $i
+    for j in `kubectl get app -n argocd $i -o json | jq -r ".status.resources[]|.name"`
+    do
+      check_resource_status $j
+    done
   done
 }
 
-function check_pod_cond(){
-  while true
-  do
-    result=$(kubectl get po -n $1 $2)
-    if [ $? -eq 0 ]; then
-      kubectl wait po -n $1 $2 --for condition=Ready --timeout=300s
-      break
-    fi
-    sleep 5
-    kubectl get apps -A
-  done
-}
-
-check_pod_cond monitoring monitoring-loki-0
+sleep 10
 check_all_app_status
