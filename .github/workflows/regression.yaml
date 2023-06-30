@@ -2,7 +2,11 @@ name: regression
 
 on:
   push:
-    branches: [develop]
+    paths:
+      - base
+      - overlays
+      - scripts
+      - spec
   workflow_dispatch:
 
 concurrency:
