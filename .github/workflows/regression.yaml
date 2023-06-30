@@ -3,11 +3,11 @@ name: regression
 on:
   push:
     paths:
-      - base
-      - overlays
-      - scripts
-      - spec
-      - .github/workflows
+      - 'base/**'
+      - 'overlays/**'
+      - 'scripts/**'
+      - 'spec/**'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 concurrency:
