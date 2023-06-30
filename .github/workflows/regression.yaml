@@ -2,11 +2,16 @@ name: regression
 
 on:
   push:
-    branches: [develop]
+    paths:
+      - 'base/**'
+      - 'overlays/**'
+      - 'scripts/**'
+      - 'spec/**'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 concurrency:
-  group: regression
+  group: ${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
