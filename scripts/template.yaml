@@ -50,6 +50,9 @@ spec:
 <% if param.key? 'syncPolicy-syncOptions-Replace' %>
     - Replace=<%= param['syncPolicy-syncOptions-Replace'] %>
 <% end %>
+<% if param.key? 'syncPolicy-syncOptions-ServerSideApply' %>
+    - ServerSideApply=<%= param['syncPolicy-syncOptions-ServerSideApply'] %>
+<% end %>
 <% if param.key? 'syncPolicy-directory-recurse' %>
     directory:
       recurse: <%= param['syncPolicy-directory-recurse'] %>
