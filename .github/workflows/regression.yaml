@@ -49,3 +49,8 @@ jobs:
           sed "s@REPLACE_ME@$ENV@" ./spec/template.yaml > env.yaml
           kubectl apply -f env.yaml
           ./spec/check_state
+      - name: post install test
+        run: |
+          sudo apt install ruby curl jq -y
+          sudo gem install rspec
+          rspec spec/post_deploy.spec
