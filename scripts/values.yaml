@@ -28,6 +28,12 @@ values:
         source-path: overlays/fluent-aggregator
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
+      database:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/database
+        source-helm-parameters-source-targetRevision: .Values.source.targetRevision
+
   - istio:
       common:
         syncPolicy-automated-prune: true
@@ -128,3 +134,31 @@ values:
         destination-namespace: logging
         source-repoURL: https://fluent.github.io/helm-charts
         source-chart: fluent-bit
+
+  - database:
+      common:
+        syncPolicy-automated-prune: false
+        syncPolicy-automated-selfHeal: true
+        path: overlays/database
+
+      tidb-crd:
+        type: kustomization
+        metadata-annotations-sync-wave: 0
+        source-path: overlays/database/crd
+        syncPolicy-syncOptions-ServerSideApply: true
+
+      tidb-operator:
+        type: helm
+        metadata-annotations-sync-wave: 1
+        destination-namespace: tidb-admin
+        source-repoURL: https://charts.pingcap.org
+        source-chart: tidb-operator
+        syncPolicy-syncOptions-CreateNamespace: true
+
+      tidb-cluster:
+        type: kustomization
+        metadata-annotations-sync-wave: 2
+        destination-namespace: tidb
+        source-path: overlays/database/cluster
+        syncPolicy-syncOptions-CreateNamespace: true
+
