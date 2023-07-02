@@ -1,0 +1,25 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: database-tidb-cluster
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: "{{ .Values.destination.name }}"
+    namespace: tidb
+  project: "{{ .Values.project }}"
+  source:
+    repoURL: "{{ .Values.source.repoURL }}"
+    path: overlays/database/cluster
+    targetRevision: "{{ .Values.source.targetRevision }}"
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      prune: false
+      selfHeal: true

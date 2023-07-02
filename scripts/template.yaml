@@ -1,7 +1,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+<% if group == 'development' %>
+  name: <%= app_name %>
+<% else %>
   name: <%= group %>-<%= app_name %>
+<% end %>
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '<%= param["metadata-annotations-sync-wave"] %>'
