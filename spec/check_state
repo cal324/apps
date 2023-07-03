@@ -5,10 +5,25 @@ def get_argo_apps(app_name)
   JSON.parse(%x(kubectl get apps -n argocd #{app_name} -o json))['status']['resources'].sort{|a,b|a['syncWave'] <=> b['syncWave']}
 end
 
+def check_status(apps)
+  get_argo_apps(apps['name']).map do |app|
+    status = (app['status'] == 'Synced' or app['status'] == 'OutOfSync')
+    health_status = (!app.key?('health') || app['health']['status'] == 'Healthy')
+    puts "  %s: status(%s)/health.status(%s)" % [app['name'], app['status'], app.key?('health') ? app['health']['status'] : 'null' ] if !(status and health_status)
+    status and health_status
+  end.all?
+end
+
 get_argo_apps('apps').each do |overlays|
   while true
-    puts get_argo_apps(overlays['name']).map{|t|"%s(%s)" % [t['name'], t['health']['status']]}.join('-> ')
-    break if get_argo_apps(overlays['name']).map{|t|t['health']['status'] == 'Healthy'}.all?
+    get_argo_apps(overlays['name']).each do |templates|
+      while true
+        puts get_argo_apps(overlays['name']).map{|t|"%s(%s)" % [t['name'], t['health']['status']]}.join('-> ')
+        break if check_status templates
+        sleep 10
+      end
+    end
+    break if check_status overlays
     sleep 10
   end
 end
