@@ -16,15 +16,14 @@ end
 
 get_argo_apps('apps').each do |overlays|
   while true
+    puts get_argo_apps(overlays['name']).map{|t|"%s(%s)" % [t['name'], t['health']['status']]}.join(' -> ')
+    (sleep 10 and next) unless check_status overlays
     get_argo_apps(overlays['name']).each do |templates|
-      puts get_argo_apps(overlays['name']).map{|t|"%s(%s)" % [t['name'], t['health']['status']]}.join(' -> ')
-      (sleep 10 and next) unless check_status overlays
       while true
         break if check_status templates
         sleep 10
       end
     end
     break if check_status overlays
-    sleep 10
   end
 end
