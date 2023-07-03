@@ -12,25 +12,25 @@ values:
 
       istio:
         type: kustomization
-        metadata-annotations-sync-wave: 0
+        metadata-annotations-sync-wave: 1
         source-path: overlays/istio
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
       monitoring:
         type: kustomization
-        metadata-annotations-sync-wave: 0
+        metadata-annotations-sync-wave: 1
         source-path: overlays/monitoring
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
       fluent-aggregator:
         type: kustomization
-        metadata-annotations-sync-wave: 1
+        metadata-annotations-sync-wave: 2
         source-path: overlays/fluent-aggregator
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
       database:
         type: kustomization
-        metadata-annotations-sync-wave: 1
+        metadata-annotations-sync-wave: 2
         source-path: overlays/database
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
@@ -42,7 +42,7 @@ values:
 
       base:
         type: helm
-        metadata-annotations-sync-wave: 0
+        metadata-annotations-sync-wave: 1
         destination-namespace: istio-system
         source-repoURL: https://istio-release.storage.googleapis.com/charts
         source-chart: base
@@ -50,26 +50,26 @@ values:
 
       istiod:
         type: helm
-        metadata-annotations-sync-wave: 0
+        metadata-annotations-sync-wave: 2
         destination-namespace: istio-system
         source-repoURL: https://istio-release.storage.googleapis.com/charts
         source-chart: istiod
 
       ingress:
         type: helm
-        metadata-annotations-sync-wave: 1
+        metadata-annotations-sync-wave: 3
         destination-namespace: istio-ingress
         source-repoURL: https://istio-release.storage.googleapis.com/charts
         source-chart: gateway
 
       namespace:
         type: kustomization
-        metadata-annotations-sync-wave: 0
+        metadata-annotations-sync-wave: 1
         source-path: overlays/istio/namespace
 
       gateway:
         type: kustomization
-        metadata-annotations-sync-wave: 2
+        metadata-annotations-sync-wave: 4
         source-path: overlays/istio/gateway
 
   - monitoring:
@@ -80,7 +80,7 @@ values:
 
       prometheus:
         type: helm
-        metadata-annotations-sync-wave: 1
+        metadata-annotations-sync-wave: 2
         destination-namespace: monitoring
         source-repoURL: https://prometheus-community.github.io/helm-charts
         source-chart: kube-prometheus-stack
@@ -88,7 +88,7 @@ values:
 
       loki:
         type: helm
-        metadata-annotations-sync-wave: 2
+        metadata-annotations-sync-wave: 3
         destination-namespace: monitoring
         source-repoURL: https://grafana.github.io/helm-charts
         source-chart: loki
@@ -96,12 +96,12 @@ values:
 
       namespace:
         type: kustomization
-        metadata-annotations-sync-wave: 0
+        metadata-annotations-sync-wave: 1
         source-path: overlays/monitoring/namespace
 
       virtualservice:
         type: kustomization
-        metadata-annotations-sync-wave: 2
+        metadata-annotations-sync-wave: 3
         source-path: overlays/monitoring/virtualservice
 
   - fluent-aggregator:
@@ -112,25 +112,25 @@ values:
 
       namespace:
         type: kustomization
-        metadata-annotations-sync-wave: 0
+        metadata-annotations-sync-wave: 1
         source-path: overlays/fluent-aggregator/namespace
 
       dummy:
         type: kustomization
-        metadata-annotations-sync-wave: 0
+        metadata-annotations-sync-wave: 1
         destination-namespace: default
         source-path: overlays/fluent-aggregator/dummy
 
       fluentd:
         type: helm
-        metadata-annotations-sync-wave: 1
+        metadata-annotations-sync-wave: 2
         destination-namespace: logging
         source-repoURL: https://fluent.github.io/helm-charts
         source-chart: fluentd
 
       fluentbit:
         type: helm
-        metadata-annotations-sync-wave: 2
+        metadata-annotations-sync-wave: 3
         destination-namespace: logging
         source-repoURL: https://fluent.github.io/helm-charts
         source-chart: fluent-bit
@@ -143,13 +143,13 @@ values:
 
       tidb-crd:
         type: kustomization
-        metadata-annotations-sync-wave: 0
+        metadata-annotations-sync-wave: 1
         source-path: overlays/database/crd
         syncPolicy-syncOptions-ServerSideApply: true
 
       tidb-operator:
         type: helm
-        metadata-annotations-sync-wave: 1
+        metadata-annotations-sync-wave: 2
         destination-namespace: tidb-admin
         source-repoURL: https://charts.pingcap.org
         source-chart: tidb-operator
@@ -157,7 +157,7 @@ values:
 
       tidb-cluster:
         type: kustomization
-        metadata-annotations-sync-wave: 2
+        metadata-annotations-sync-wave: 3
         destination-namespace: tidb
         source-path: overlays/database/cluster
         syncPolicy-syncOptions-CreateNamespace: true

@@ -1,33 +1,14 @@
-function check_resource_status(){
-  RESOURCE_NAME=$1
+#! /usr/bin/env ruby
+require 'json'
 
-  kubectl get apps -A > check.log
+def get_argo_apps(app_name)
+  JSON.parse(%x(kubectl get apps -n argocd #{app_name} -o json))['status']['resources'].sort{|a,b|a['syncWave'] <=> b['syncWave']}
+end
+
+get_argo_apps('apps').each do |overlays|
   while true
-  do
-    result=$(kubectl get apps -n argocd $RESOURCE_NAME)
-    if [ $? -eq 0 ]; then
-      kubectl wait apps -n argocd $RESOURCE_NAME --for jsonpath='{status.health.status}'=Healthy --timeout=600s
-      if [ $? -ne 0 ]; then
-        exit 1
-      fi
-      break
-    fi
+    puts get_argo_apps(overlays['name']).map{|t|"%s(%s)" % [t['name'], t['health']['status']]}.join('-> ')
+    break if get_argo_apps(overlays['name']).map{|t|t['health']['status'] == 'Healthy'}.all?
     sleep 10
-    kubectl get apps -A > current.log
-    diff check.log current.log
-    mv current.log check.log
-  done
-}
-
-function check_all_app_status(){
-  for i in istio monitoring fluent-aggregator database
-  do
-    for j in `kubectl get app -n argocd $i -o json | jq -r ".status.resources[]|.name"`
-    do
-      check_resource_status $j
-    done
-  done
-}
-
-sleep 10
-check_all_app_status
+  end
+end
