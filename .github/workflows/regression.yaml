@@ -52,7 +52,7 @@ jobs:
           spec/check_state
       - name: post install test
         run: |
-          sleep 120
+          sleep 200
           kubectl port-forward service/sample-cluster-tidb 22222:4000 -n tidb &
           sudo apt install ruby curl jq mysql-client -y
           sudo gem install rspec -N
