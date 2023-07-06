@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://grafana.github.io/helm-charts
     chart: loki
-    targetRevision: 5.8.8
+    targetRevision: 5.8.9
     helm:
       valueFiles:
       - "$values/overlays/monitoring/files/loki.yaml"
