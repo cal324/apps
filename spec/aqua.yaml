@@ -8,7 +8,7 @@
 #   - all
 registries:
 - type: standard
-  ref: v4.24.0 # renovate: depName=aquaproj/aqua-registry
+  ref: v4.25.0 # renovate: depName=aquaproj/aqua-registry
 packages:
 - name: argoproj/argo-cd@v2.7.6
 - name: helm/helm@v3.12.1
