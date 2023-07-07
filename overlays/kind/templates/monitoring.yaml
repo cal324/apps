@@ -20,6 +20,8 @@ spec:
       parameters:
       - name: source.targetRevision
         value: "{{ .Values.source.targetRevision }}"
+      - name: destination.kubernetes
+        value: kind
   syncPolicy:
     syncOptions: 
     automated:

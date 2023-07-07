@@ -35,6 +35,35 @@ values:
         source-path: overlays/database
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
+  - aks:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+
+      istio:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/istio
+        source-helm-parameters-source-targetRevision: .Values.source.targetRevision
+
+      monitoring:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/monitoring
+        source-helm-parameters-source-targetRevision: .Values.source.targetRevision
+
+      fluent-aggregator:
+        type: kustomization
+        metadata-annotations-sync-wave: 2
+        source-path: overlays/fluent-aggregator
+        source-helm-parameters-source-targetRevision: .Values.source.targetRevision
+
+      database:
+        type: kustomization
+        metadata-annotations-sync-wave: 2
+        source-path: overlays/database
+        source-helm-parameters-source-targetRevision: .Values.source.targetRevision
+
   - istio:
       common:
         syncPolicy-automated-prune: true

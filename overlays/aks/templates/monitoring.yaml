@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring
+  name: aks-monitoring
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '1'
@@ -20,6 +20,8 @@ spec:
       parameters:
       - name: source.targetRevision
         value: "{{ .Values.source.targetRevision }}"
+      - name: destination.kubernetes
+        value: aks
   syncPolicy:
     syncOptions: 
     automated:
