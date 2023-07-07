@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring-prometheus
+  name: kind-fluent-aggregator
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '2'
@@ -11,21 +11,17 @@ metadata:
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: monitoring
   project: "{{ .Values.project }}"
-  sources:
-  - repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 47.2.0
-    helm:
-      valueFiles:
-      - "$values/overlays/monitoring/files/{{ .Values.destination.kubernetes }}_prometheus.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
+  source:
+    repoURL: "{{ .Values.source.repoURL }}"
+    path: overlays/fluent-aggregator
     targetRevision: "{{ .Values.source.targetRevision }}"
-    ref: values
+    helm:
+      parameters:
+      - name: source.targetRevision
+        value: "{{ .Values.source.targetRevision }}"
   syncPolicy:
-    syncOptions:
-    - ServerSideApply=true
+    syncOptions: 
     automated:
       prune: true
       selfHeal: true

@@ -19,7 +19,8 @@ spec:
     targetRevision: 0.4.3
     helm:
       valueFiles:
-      - "$values/overlays/fluent-aggregator/files/fluentd.yaml"
+      - "$values/overlays/fluent-aggregator/files/{{ .Values.destination.kubernetes
+        }}_fluentd.yaml"
   - repoURL: "{{ .Values.source.repoURL }}"
     targetRevision: "{{ .Values.source.targetRevision }}"
     ref: values

@@ -1,0 +1,20 @@
+grafana:
+  adminPassword: admin
+  additionalDataSources: 
+   - name: loki
+     access: proxy
+     basicAuth: false
+     editable: true
+     orgId: 1
+     uid: loki
+     type: loki
+     url: http://loki-gateway.monitoring.svc
+prometheus:
+  prometheusSpec:
+    storageSpec: 
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 50Gi

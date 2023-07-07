@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/cal324/apps.git
     targetRevision: REPLACE_ME
-    path: overlays/development
+    path: overlays/kind
     helm:
       parameters:
         - name: source.targetRevision

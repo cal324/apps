@@ -25,7 +25,7 @@ spec:
     targetRevision: <%= param['source-targetRevision'] %>
     helm:
       valueFiles:
-        - $values/<%= common['path'] %>/files/<%= app_name %>.yaml
+        - $values/<%= common['path'] %>/files/<%= '{{' %> <%= global['destination-kubernetes'] %> <%= '}}' %>_<%= app_name %>.yaml
   - repoURL: "<%= '{{' %> <%= global['source-repoURL'] %> <%= '}}' %>"
     targetRevision: "<%= '{{' %> <%= global['source-targetRevision'] %> <%= '}}' %>"
     ref: values

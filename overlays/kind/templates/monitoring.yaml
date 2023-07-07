@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istio-base
+  name: kind-monitoring
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '1'
@@ -11,21 +11,17 @@ metadata:
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: istio-system
   project: "{{ .Values.project }}"
-  sources:
-  - repoURL: https://istio-release.storage.googleapis.com/charts
-    chart: base
-    targetRevision: 1.18.0
-    helm:
-      valueFiles:
-      - "$values/overlays/istio/files/{{ .Values.destination.kubernetes }}_base.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
+  source:
+    repoURL: "{{ .Values.source.repoURL }}"
+    path: overlays/monitoring
     targetRevision: "{{ .Values.source.targetRevision }}"
-    ref: values
+    helm:
+      parameters:
+      - name: source.targetRevision
+        value: "{{ .Values.source.targetRevision }}"
   syncPolicy:
-    syncOptions:
-    - CreateNamespace=true
+    syncOptions: 
     automated:
       prune: true
       selfHeal: true

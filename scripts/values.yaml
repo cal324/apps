@@ -1,11 +1,12 @@
 global:
   project: .Values.project
   destination-name: .Values.destination.name
+  destination-kubernetes: .Values.destination.kubernetes
   source-targetRevision: .Values.source.targetRevision
   source-repoURL: .Values.source.repoURL
 
 values:
-  - development:
+  - kind:
       common:
         syncPolicy-automated-prune: true
         syncPolicy-automated-selfHeal: true
