@@ -34,7 +34,7 @@ spec:
     repoURL: "<%= '{{' %> <%= global['source-repoURL'] %> <%= '}}' %>"
     path: <%= param['source-path'] %>
     targetRevision: "<%= '{{' %> <%= global['source-targetRevision'] %> <%= '}}' %>"
-<% if group == 'kind' or group == 'aks' %>
+<% if group == 'kind' or group == 'aks' or group == 'capz' %>
     helm:
       parameters:
         - name: source.targetRevision

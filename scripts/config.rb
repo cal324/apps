@@ -2,7 +2,7 @@ require 'yaml'
 require 'erb'
 
 def get_app_yaml_name(group, app_name, common)
-  if group == 'kind' or group == 'aks'
+  if group == 'kind' or group == 'aks' or group == 'capz'
     "../overlays/#{group}/templates/#{app_name}.yaml"
   else
     "../#{common['path']}/templates/#{app_name}.yaml"
