@@ -1,0 +1,31 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-rook-operator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: "{{ .Values.destination.name }}"
+    namespace: rook-ceph
+  project: "{{ .Values.project }}"
+  sources:
+  - repoURL: https://charts.rook.io/release
+    chart: rook-ceph
+    targetRevision: REPLACE_ME
+    helm:
+      valueFiles:
+      - "$values/overlays/rook/files/{{ .Values.destination.kubernetes }}_rook-operator.yaml"
+  - repoURL: "{{ .Values.source.repoURL }}"
+    targetRevision: "{{ .Values.source.targetRevision }}"
+    ref: values
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      prune: false
+      selfHeal: true

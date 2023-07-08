@@ -1,0 +1,30 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-rook-cluster
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: "{{ .Values.destination.name }}"
+    namespace: rook-ceph
+  project: "{{ .Values.project }}"
+  sources:
+  - repoURL: https://charts.rook.io/release
+    chart: rook-ceph-cluster
+    targetRevision: REPLACE_ME
+    helm:
+      valueFiles:
+      - "$values/overlays/rook/files/{{ .Values.destination.kubernetes }}_rook-cluster.yaml"
+  - repoURL: "{{ .Values.source.repoURL }}"
+    targetRevision: "{{ .Values.source.targetRevision }}"
+    ref: values
+  syncPolicy:
+    syncOptions: 
+    automated:
+      prune: false
+      selfHeal: true

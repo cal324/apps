@@ -32,10 +32,12 @@ global = config['global']
 
 config['values'].each do |value|
   group = value.keys[0]
+  puts "group: #{group} ..."
   common = value[group]['common']
   value[group].each do |params|
     app_name = params[0]
     param = params[1]
+    puts "  app_name: #{app_name}"
     next if app_name == 'common'
 
     app_yaml_name = get_app_yaml_name(group, app_name, common)

@@ -75,21 +75,27 @@ values:
         source-path: overlays/istio
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
-      monitoring:
+      rook:
         type: kustomization
         metadata-annotations-sync-wave: 1
+        source-path: overlays/rook
+        source-helm-parameters-source-targetRevision: .Values.source.targetRevision
+
+      monitoring:
+        type: kustomization
+        metadata-annotations-sync-wave: 2
         source-path: overlays/monitoring
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
       fluent-aggregator:
         type: kustomization
-        metadata-annotations-sync-wave: 2
+        metadata-annotations-sync-wave: 3
         source-path: overlays/fluent-aggregator
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
       database:
         type: kustomization
-        metadata-annotations-sync-wave: 2
+        metadata-annotations-sync-wave: 3
         source-path: overlays/database
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
@@ -220,4 +226,25 @@ values:
         destination-namespace: tidb
         source-path: overlays/database/cluster
         syncPolicy-syncOptions-CreateNamespace: true
+
+  - rook:
+      common:
+        syncPolicy-automated-prune: false
+        syncPolicy-automated-selfHeal: true
+        path: overlays/rook
+
+      rook-operator:
+        type: helm
+        metadata-annotations-sync-wave: 1
+        destination-namespace: rook-ceph
+        source-repoURL: https://charts.rook.io/release
+        source-chart: rook-ceph
+        syncPolicy-syncOptions-CreateNamespace: true
+
+      rook-cluster:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: rook-ceph
+        source-repoURL: https://charts.rook.io/release
+        source-chart: rook-ceph-cluster
 
