@@ -227,6 +227,12 @@ values:
         source-path: overlays/database/cluster
         syncPolicy-syncOptions-CreateNamespace: true
 
+      nodeport:
+        type: kustomization
+        metadata-annotations-sync-wave: 4
+        destination-namespace: tidb
+        source-path: overlays/database/nodeport
+
   - rook:
       common:
         syncPolicy-automated-prune: false
