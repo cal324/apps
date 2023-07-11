@@ -21,7 +21,7 @@ RSpec.describe 'Confirmation of post-deploy operation' do
   end
 
   it 'The version table must be selectable in TiDB.' do
-    result = %x(mysql --comments -h 127.0.0.1 -P 22222 -u root -e 'SELECT version();')
+    result = %x(mysql --comments -h 127.0.0.1 -P 30002 -u root -e 'SELECT version();')
     puts result
     expect(result).to match /version\(\)/
     expect(result).to match /TiDB/

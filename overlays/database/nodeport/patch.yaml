@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cluster-nodeport
+  namespace: tidb
+spec:
+  type: NodePort
+  ports:
+    - name: mysql
+      port: 4000
+      protocol: TCP
+      targetPort: 4000
+      nodePort: 30002
+  selector:
+    app.kubernetes.io/component: tidb
+    app.kubernetes.io/instance: database-tidb-cluster
+    app.kubernetes.io/managed-by: tidb-operator
+    app.kubernetes.io/name: tidb-cluster
+
