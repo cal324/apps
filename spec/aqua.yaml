@@ -12,7 +12,7 @@ registries:
 packages:
 - name: argoproj/argo-cd@v2.7.7
 - name: helm/helm@v3.12.1
-- name: cli/cli@v2.31.0
+- name: cli/cli@v2.32.0
 - name: kubernetes-sigs/cluster-api@v1.4.4
 - name: kubernetes-sigs/kind@v0.20.0
 - name: kubernetes-sigs/kustomize@kustomize/v5.1.0
