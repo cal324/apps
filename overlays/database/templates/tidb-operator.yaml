@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://charts.pingcap.org
     chart: tidb-operator
-    targetRevision: v1.4.5
+    targetRevision: v1.4.6
     helm:
       valueFiles:
       - "$values/overlays/database/files/{{ .Values.destination.kubernetes }}_tidb-operator.yaml"
