@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://charts.rook.io/release
     chart: rook-ceph-cluster
-    targetRevision: v1.11.9
+    targetRevision: v1.12.0
     helm:
       valueFiles:
       - "$values/overlays/rook/files/{{ .Values.destination.kubernetes }}_rook-cluster.yaml"
