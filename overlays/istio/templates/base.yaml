@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://istio-release.storage.googleapis.com/charts
     chart: base
-    targetRevision: 1.18.1
+    targetRevision: 1.18.2
     helm:
       valueFiles:
       - "$values/overlays/istio/files/{{ .Values.destination.kubernetes }}_base.yaml"
