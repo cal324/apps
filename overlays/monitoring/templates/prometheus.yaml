@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: 48.2.0
+    targetRevision: 48.2.2
     helm:
       valueFiles:
       - "$values/overlays/monitoring/files/{{ .Values.destination.kubernetes }}_prometheus.yaml"
