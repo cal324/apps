@@ -1,3 +1,13 @@
+alertmanager:
+  config:
+    route:
+      receiver: 'webhook'
+      routes:
+        - receiver: 'webhook'
+    receivers:
+    - name: webhook
+      webhook_configs:
+        - url: "http://dummy-app.default.svc.cluster.local:80"
 grafana:
   adminPassword: admin
   additionalDataSources: 
