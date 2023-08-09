@@ -10,7 +10,7 @@ prometheusRule:
   enabled: true
   namespace: "monitoring"
   additionalLabels:
-    release: prometheus
+    release: monitoring-prometheus
   rules:
   - alert: NoOutputBytesProcessed
     expr: rate(fluentbit_output_proc_bytes_total[5m]) == 0

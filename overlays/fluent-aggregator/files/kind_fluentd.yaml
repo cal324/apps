@@ -15,7 +15,7 @@ metrics:
   prometheusRule:
     enabled: true
     additionalLabels: 
-      release: prometheus
+      release: monitoring-prometheus
     namespace: "monitoring"
     rules:
       - alert: FluentdDown
