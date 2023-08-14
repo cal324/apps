@@ -21,7 +21,7 @@ spec:
       - name: source.targetRevision
         value: "{{ .Values.source.targetRevision }}"
       - name: destination.kubernetes
-        value: capz
+        value: "{{ .Values.destination.kubernetes }}"
   syncPolicy:
     syncOptions: 
     automated:
