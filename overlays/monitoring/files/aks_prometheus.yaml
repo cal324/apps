@@ -7,7 +7,7 @@ alertmanager:
     receivers:
     - name: webhook
       webhook_configs:
-        - url: "http://dummy-app.default.svc.cluster.local:80"
+        - url: "http://fluent-aggregator-fluentd.logging.svc:8080"
 grafana:
   adminPassword: admin
   additionalDataSources: 

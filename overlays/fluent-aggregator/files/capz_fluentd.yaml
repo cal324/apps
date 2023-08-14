@@ -6,6 +6,9 @@ service:
    - name: "forwarder"
      protocol: TCP
      containerPort: 24224
+   - name: "http"
+     protocol: TCP
+     containerPort: 8080
 metrics:
   serviceMonitor:
     enabled: true
@@ -53,6 +56,12 @@ fileConfigs:
 
     <source>
       @type forward
+    </source>
+    
+    <source>
+      @type http
+      port 8080
+      bind 0.0.0.0
     </source>
 
   02_filters.conf: |-
