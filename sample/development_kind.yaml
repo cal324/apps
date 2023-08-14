@@ -1,3 +1,4 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -13,14 +14,13 @@ spec:
     path: overlays/kind
     helm:
       parameters:
-        - name: source.targetRevision
-          value: develop
-        - name: destination.kubernetes
-          value: kind
+      - name: source.targetRevision
+        value: develop
+      - name: destination.kubernetes
+        value: kind
   destination:
     name: in-cluster
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-
