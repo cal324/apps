@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://charts.rook.io/release
     chart: rook-ceph
-    targetRevision: v1.12.1
+    targetRevision: v1.12.2
     helm:
       valueFiles:
       - "$values/overlays/rook/files/{{ .Values.destination.kubernetes }}_rook-operator.yaml"
