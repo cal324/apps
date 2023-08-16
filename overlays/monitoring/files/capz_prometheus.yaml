@@ -19,6 +19,13 @@ grafana:
      uid: loki
      type: loki
      url: http://loki-gateway.monitoring.svc
+   - name: jaeger
+     access: browser
+     basicAuth: false
+     editable: true
+     uid: jaeger
+     type: jaeger
+     url: simplest-query.monitoring.svc.cluster.local:16686
 prometheus:
   prometheusSpec:
     storageSpec: 
