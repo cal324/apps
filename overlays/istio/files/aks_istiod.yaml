@@ -2,7 +2,7 @@ meshConfig:
   defaultConfig:
     tracing:
       zipkin:
-        address: simplest-collector.monitoring.svc.cluster.local:9411
+        address: simplest-collector.tracing.svc.cluster.local:9411
 sidecarInjectorWebhook:
   neverInjectSelector:
   - matchExpressions:

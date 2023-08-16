@@ -2,24 +2,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring-jaeger-operator
+  name: tracing-cert-manager
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: '3'
+    argocd.argoproj.io/sync-wave: '2'
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: monitoring
+    namespace: tracing
   project: "{{ .Values.project }}"
   sources:
-  - repoURL: https://jaegertracing.github.io/helm-charts
-    chart: jaeger-operator
-    targetRevision: 2.46.2
+  - repoURL: https://charts.jetstack.io
+    chart: cert-manager
+    targetRevision: v1.12.3
     helm:
       valueFiles:
-      - "$values/overlays/monitoring/files/{{ .Values.destination.kubernetes }}_jaeger-operator.yaml"
+      - "$values/overlays/tracing/files/{{ .Values.destination.kubernetes }}_cert-manager.yaml"
   - repoURL: "{{ .Values.source.repoURL }}"
     targetRevision: "{{ .Values.source.targetRevision }}"
     ref: values

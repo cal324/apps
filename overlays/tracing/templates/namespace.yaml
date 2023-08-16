@@ -2,10 +2,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring-jaeger-simplest
+  name: tracing-namespace
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: '4'
+    argocd.argoproj.io/sync-wave: '1'
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
@@ -14,7 +14,7 @@ spec:
   project: "{{ .Values.project }}"
   source:
     repoURL: "{{ .Values.source.repoURL }}"
-    path: overlays/monitoring/jaeger-simplest
+    path: overlays/tracing/namespace
     targetRevision: "{{ .Values.source.targetRevision }}"
   syncPolicy:
     syncOptions: 

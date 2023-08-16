@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring-cert-manager
+  name: capz-tracing
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '2'
@@ -11,21 +11,19 @@ metadata:
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: monitoring
   project: "{{ .Values.project }}"
-  sources:
-  - repoURL: https://charts.jetstack.io
-    chart: cert-manager
-    targetRevision: v1.12.3
-    helm:
-      valueFiles:
-      - "$values/overlays/monitoring/files/{{ .Values.destination.kubernetes }}_cert-manager.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
+  source:
+    repoURL: "{{ .Values.source.repoURL }}"
+    path: overlays/tracing
     targetRevision: "{{ .Values.source.targetRevision }}"
-    ref: values
+    helm:
+      parameters:
+      - name: source.targetRevision
+        value: "{{ .Values.source.targetRevision }}"
+      - name: destination.kubernetes
+        value: "{{ .Values.destination.kubernetes }}"
   syncPolicy:
-    syncOptions:
-    - ServerSideApply=true
+    syncOptions: 
     automated:
       prune: true
       selfHeal: true

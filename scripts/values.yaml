@@ -23,6 +23,12 @@ values:
         source-path: overlays/monitoring
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
+      tracing:
+        type: kustomization
+        metadata-annotations-sync-wave: 2
+        source-path: overlays/tracing
+        source-helm-parameters-source-targetRevision: .Values.source.targetRevision
+
       fluent-aggregator:
         type: kustomization
         metadata-annotations-sync-wave: 2
@@ -50,6 +56,12 @@ values:
         type: kustomization
         metadata-annotations-sync-wave: 1
         source-path: overlays/monitoring
+        source-helm-parameters-source-targetRevision: .Values.source.targetRevision
+
+      tracing:
+        type: kustomization
+        metadata-annotations-sync-wave: 2
+        source-path: overlays/tracing
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
       fluent-aggregator:
@@ -85,6 +97,12 @@ values:
         type: kustomization
         metadata-annotations-sync-wave: 2
         source-path: overlays/monitoring
+        source-helm-parameters-source-targetRevision: .Values.source.targetRevision
+
+      tracing:
+        type: kustomization
+        metadata-annotations-sync-wave: 2
+        source-path: overlays/tracing
         source-helm-parameters-source-targetRevision: .Values.source.targetRevision
 
       fluent-aggregator:
@@ -169,10 +187,21 @@ values:
         metadata-annotations-sync-wave: 3
         source-path: overlays/monitoring/virtualservice
 
+  - tracing:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/tracing
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/tracing/namespace
+
       cert-manager:
         type: helm
         metadata-annotations-sync-wave: 2
-        destination-namespace: monitoring
+        destination-namespace: tracing
         source-repoURL: https://charts.jetstack.io
         source-chart: cert-manager
         syncPolicy-syncOptions-ServerSideApply: true
@@ -180,7 +209,7 @@ values:
       jaeger-operator:
         type: helm
         metadata-annotations-sync-wave: 3
-        destination-namespace: monitoring
+        destination-namespace: tracing
         source-repoURL: https://jaegertracing.github.io/helm-charts
         source-chart: jaeger-operator
         syncPolicy-syncOptions-ServerSideApply: true
@@ -188,7 +217,7 @@ values:
       jaeger-simplest:
         type: kustomization
         metadata-annotations-sync-wave: 4
-        source-path: overlays/monitoring/jaeger-simplest
+        source-path: overlays/tracing/jaeger-simplest
 
   - fluent-aggregator:
       common:

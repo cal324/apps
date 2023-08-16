@@ -25,7 +25,7 @@ grafana:
      editable: true
      uid: jaeger
      type: jaeger
-     url: simplest-query.monitoring.svc.cluster.local:16686
+     url: simplest-query.tracing.svc.cluster.local:16686
 prometheus:
   prometheusSpec:
     storageSpec: 
