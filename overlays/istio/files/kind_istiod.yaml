@@ -1,3 +1,8 @@
+global:
+  proxy:
+    resources:
+      requests:
+        cpu: 10m
 meshConfig:
   defaultConfig:
     tracing:
