@@ -6,6 +6,7 @@ global:
 meshConfig:
   defaultConfig:
     tracing:
+      sampling: 10
       zipkin:
         address: simplest-collector.tracing.svc.cluster.local:9411
 sidecarInjectorWebhook:
