@@ -3,6 +3,9 @@ require 'rake'
 
 task 'default' => 'develop:kind'
 
+$tasks = []
+$mutex = Mutex.new
+
 task 'argocd' do
   `kustomize build https://github.com/cal324/apps/base/argocd/?ref=HEAD | kubectl apply -n argocd -f -`
   puts `kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-server --for condition=Ready --timeout=300s`
@@ -16,28 +19,57 @@ task 'kind' do
   puts `kubectl cluster-info --context kind-kind`
 end
 
-%w(istio monitoring tracing fluent-aggregator database rook).each do |name|
+task 'cluster_api' do
+end
+
+task 'capz' do
+end
+
+task 'aks' do
+end
+
+(1..5).each do |i|
+  task ('wave' + i.to_s) do
+    puts "wave#{i} ..."
+    sleep 3
+    $tasks.each(&:join)
+  end
+end
+
+apps = %w(istio monitoring tracing fluent-aggregator database rook)
+
+apps.each do |name|
   task name do |task|
-    branch, kubernetes = Rake.application.top_level_tasks[0].split(':')
-    puts `erb revesion=#{branch} kubernetes=#{kubernetes} sample/#{task.name}.yaml | kubectl apply -f -`
-    sleep 5
-    Applications.new(task.name).wait
+    execute_task task.name
+  end
+
+  task ('@' + name) do |task|
+    $tasks << Thread.new do
+      execute_task (task.name.gsub(/@/,''))
+    end
   end
 end
 
 namespace :develop do
-  task :kind => %w(kind argocd istio tracing monitoring fluent-aggregator database)
-  task :capz
-  task :aks
+  task :kind => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @database wave2)
+  task :capz => %w(cluster_api capz argocd istio rook tracing monitoring fluent-aggregator database)
+  task :aks  => %w(aks argocd istio tracing monitoring fluent-aggregator database)
 end
 
 namespace :main do
   task :kind => %w(kind argocd istio tracing monitoring fluent-aggregator database)
-  task :capz
-  task :aks
+  task :capz => %w(cluster_api capz argocd istio rook tracing monitoring fluent-aggregator database)
+  task :aks  => %w(aks argocd istio tracing monitoring fluent-aggregator database)
 end
 
-$DEBUG_FORMAT = "\e[%sm%-65s %-35s %-10s %-10s\e[0m"
+def execute_task(name)
+  branch, kubernetes = Rake.application.top_level_tasks[0].split(':')
+  puts `erb revesion=#{branch} kubernetes=#{kubernetes} sample/#{name}.yaml | kubectl apply -f -`
+  sleep 5
+  Applications.new(name).wait
+end
+
+$DEBUG_FORMAT = "\e[%sm%-65s %-35s %-10s %-10s %-s\e[0m"
 
 module ResourceCommon
   def is_healthy?
@@ -48,13 +80,13 @@ module ResourceCommon
 
   def print_header
     puts %x(date)
-    header = [37, 'name', 'kind', 'status', 'health']
+    header = [37, 'name', 'kind', 'status', 'health', 'message']
     puts $DEBUG_FORMAT % header
     puts $DEBUG_FORMAT % header.map{|i|'-'*i.size}
   end
 
   def debug(indent = 0, print_error_only = false)
-    puts ' '*indent + $DEBUG_FORMAT % [is_healthy? ? 32 : 31, @name, @kind, @status, @health] #unless (print_error_only and is_healthy?)
+    puts ' '*indent + $DEBUG_FORMAT % [is_healthy? ? 32 : 31, @name, @kind, @status, @health, @message] #unless (print_error_only and is_healthy?)
   end
 end
 
@@ -67,6 +99,7 @@ class Resource
     @name = @resource['name']
     @status = @resource['status']
     @health = @resource.key?('health') ? @resource['health']['status'] : '-'
+    @message = (@resource.key?('health') and @resource['health'].key?('message')) ? @resource['health']['message'] : ''
   end
 end
 
@@ -83,6 +116,7 @@ class Application
     @kind = @json['kind']
     @status = @json['status']['sync']['status']
     @health = @json.key?('health') ? @json['health']['status'] : '-'
+    @message = (@json.key?('health') and @json['health'].key?('message')) ? @json['health']['message'] : ''
   end
 
   def resources
@@ -97,7 +131,7 @@ class Application
 
   def wait
     while true
-      debug
+      $mutex.synchronize{debug}
       break if all_ok?
       sleep 10
       update
