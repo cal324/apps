@@ -52,14 +52,14 @@ end
 
 namespace :develop do
   task :kind => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @database wave2)
-  task :capz => %w(cluster_api capz argocd istio rook tracing monitoring fluent-aggregator database)
-  task :aks  => %w(aks argocd istio tracing monitoring fluent-aggregator database)
+  task :capz => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @database wave3)
+  task :aks  => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @database wave2)
 end
 
 namespace :main do
-  task :kind => %w(kind argocd istio tracing monitoring fluent-aggregator database)
-  task :capz => %w(cluster_api capz argocd istio rook tracing monitoring fluent-aggregator database)
-  task :aks  => %w(aks argocd istio tracing monitoring fluent-aggregator database)
+  task :kind => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @database wave2)
+  task :capz => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @database wave3)
+  task :aks  => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @database wave2)
 end
 
 def execute_task(name)

@@ -1,9 +1,15 @@
+global:
+  proxy:
+    resources:
+      requests:
+        cpu: 10m
 meshConfig:
   defaultConfig:
     tracing:
+      sampling: 10
       zipkin:
         address: simplest-collector.tracing.svc.cluster.local:9411
 sidecarInjectorWebhook:
   neverInjectSelector:
   - matchExpressions:
-    - {key: app, operator: In, values: [kube-prometheus-stack-admission-create,kube-prometheus-stack-admission-patch]}
+    - {key: app, operator: In, values: [kube-prometheus-stack-admission-create,kube-prometheus-stack-admission-patch,startupapicheck]}
