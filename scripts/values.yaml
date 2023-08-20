@@ -187,6 +187,11 @@ values:
         metadata-annotations-sync-wave: 3
         source-path: overlays/monitoring/virtualservice
 
+      monitor:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        source-path: overlays/monitoring/monitor
+
   - tracing:
       common:
         syncPolicy-automated-prune: true
@@ -218,6 +223,26 @@ values:
         type: kustomization
         metadata-annotations-sync-wave: 4
         source-path: overlays/tracing/jaeger-simplest
+
+      kiali-operator:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: kiali-operator
+        source-repoURL: https://kiali.org/helm-charts
+        source-chart: kiali-operator
+        syncPolicy-syncOptions-ServerSideApply: true
+        syncPolicy-syncOptions-CreateNamespace: true
+
+      kiali:
+        type: kustomization
+        destination-namespace: istio-system
+        metadata-annotations-sync-wave: 3
+        source-path: overlays/tracing/kiali
+
+      virtualservice:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        source-path: overlays/tracing/virtualservice
 
   - fluent-aggregator:
       common:
