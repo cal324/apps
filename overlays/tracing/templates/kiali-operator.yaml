@@ -1,0 +1,32 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tracing-kiali-operator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: "{{ .Values.destination.name }}"
+    namespace: kiali-operator
+  project: "{{ .Values.project }}"
+  sources:
+  - repoURL: https://kiali.org/helm-charts
+    chart: kiali-operator
+    targetRevision: 1.72.0
+    helm:
+      valueFiles:
+      - "$values/overlays/tracing/files/{{ .Values.destination.kubernetes }}_kiali-operator.yaml"
+  - repoURL: "{{ .Values.source.repoURL }}"
+    targetRevision: "{{ .Values.source.targetRevision }}"
+    ref: values
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    automated:
+      prune: true
+      selfHeal: true

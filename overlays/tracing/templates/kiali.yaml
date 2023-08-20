@@ -1,0 +1,24 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tracing-kiali
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '3'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: "{{ .Values.destination.name }}"
+    namespace: istio-system
+  project: "{{ .Values.project }}"
+  source:
+    repoURL: "{{ .Values.source.repoURL }}"
+    path: overlays/tracing/kiali
+    targetRevision: "{{ .Values.source.targetRevision }}"
+  syncPolicy:
+    syncOptions: 
+    automated:
+      prune: true
+      selfHeal: true
