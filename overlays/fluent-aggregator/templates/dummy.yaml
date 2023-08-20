@@ -11,7 +11,7 @@ metadata:
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: default
+    namespace: logging
   project: "{{ .Values.project }}"
   source:
     repoURL: "{{ .Values.source.repoURL }}"
