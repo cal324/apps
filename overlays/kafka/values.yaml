@@ -1,0 +1,7 @@
+project: default
+destination:
+  name: in-cluster
+  kubernetes: kind
+source:
+  targetRevision: develop
+  repoURL: https://github.com/cal324/apps.git
