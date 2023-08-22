@@ -1,10 +1,20 @@
 require 'json'
 require 'rake'
 
-task 'default' => 'develop:kind'
+task 'default' => 'develop:kind:base'
 
 $tasks = []
 $mutex = Mutex.new
+$command = 'create'
+
+task :c
+task :create
+task :d do
+  $command = 'delete'
+end
+task :delete do
+  $command = 'delete'
+end
 
 task 'argocd' do
   `kustomize build https://github.com/cal324/apps/base/argocd/?ref=HEAD | kubectl apply -n argocd -f -`
@@ -36,7 +46,7 @@ end
   end
 end
 
-apps = %w(istio monitoring tracing fluent-aggregator database rook)
+apps = %w(istio monitoring tracing fluent-aggregator database rook kafka)
 
 apps.each do |name|
   task name do |task|
@@ -51,22 +61,51 @@ apps.each do |name|
 end
 
 namespace :develop do
-  task :kind => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @database wave2)
-  task :capz => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @database wave3)
-  task :aks  => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @database wave2)
+  namespace :kind do
+    task :all => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @database @kafka wave2)
+    task :base => %w(kind argocd istio monitoring)
+    task :perf => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @kafka wave2)
+  end
+  namespace :capz do
+    task :all => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @database @kafka wave3)
+    task :base => %w(cluster_api capz argocd @istio @rook wave1 monitoring)
+    task :perf => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @kafka wave3)
+  end
+  namespace :aks do
+    task :all => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @database @kafka wave2)
+    task :base => %w(aks argocd istio monitoring)
+    task :perf => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @kafka wave2)
+  end
 end
 
 namespace :main do
-  task :kind => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @database wave2)
-  task :capz => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @database wave3)
-  task :aks  => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @database wave2)
+  namespace :kind do
+    task :all => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @database @kafka wave2)
+    task :base => %w(kind argocd istio monitoring)
+    task :perf => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @kafka wave2)
+  end
+  namespace :capz do
+    task :all => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @database @kafka wave3)
+    task :base => %w(cluster_api capz argocd @istio @rook wave1 monitoring)
+    task :perf => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @kafka wave3)
+  end
+  namespace :aks do
+    task :all => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @database @kafka wave2)
+    task :base => %w(aks argocd istio monitoring)
+    task :perf => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @kafka wave2)
+  end
 end
 
 def execute_task(name)
   branch, kubernetes = Rake.application.top_level_tasks[0].split(':')
-  puts `erb revesion=#{branch} kubernetes=#{kubernetes} sample/#{name}.yaml | kubectl apply -f -`
-  sleep 5
-  Applications.new(name).wait
+  if $command == 'create'
+    puts `erb revesion=#{branch} kubernetes=#{kubernetes} sample/#{name}.yaml | kubectl apply -f -`
+    sleep 5
+    Applications.new(name).wait
+    #puts `rspec -e #{name} spec/post_deploy.spec`
+  else $command == 'delete'
+    puts `erb revesion=#{branch} kubernetes=#{kubernetes} sample/#{name}.yaml | kubectl delete -f -`
+  end
 end
 
 $DEBUG_FORMAT = "\e[%sm%-65s %-35s %-10s %-10s %-s\e[0m"
