@@ -2,24 +2,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: database-tidb-cluster
+  name: kafka-namespace
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: '3'
+    argocd.argoproj.io/sync-wave: '1'
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: tidb
   project: "{{ .Values.project }}"
   source:
     repoURL: "{{ .Values.source.repoURL }}"
-    path: overlays/database/cluster
+    path: overlays/kafka/namespace
     targetRevision: "{{ .Values.source.targetRevision }}"
   syncPolicy:
-    syncOptions:
-    - CreateNamespace=true
+    syncOptions: 
     automated:
       prune: true
       selfHeal: true

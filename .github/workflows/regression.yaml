@@ -8,6 +8,7 @@ on:
       - 'scripts/**'
       - 'spec/**'
       - '.github/workflows/**'
+      - 'Rakefile'
   workflow_dispatch:
 
 concurrency:
@@ -32,17 +33,41 @@ jobs:
           aqua i -l
       - name: install ruby
         run: |
-          sudo apt install ruby rake -y
-      - name: install cluster and apps 
+          sudo apt install ruby rake jq -y
+          sudo gem install rspec -N
+      - name: install base
         env:
           ENV: ${{ github.ref_name }}
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          rake
-      - name: post install test
+          rake c $ENV:kind:base
+      - name: test fluent-aggregator
+        env:
+          ENV: ${{ github.ref_name }}
         run: |
-          sleep 300
-          sudo apt install jq mysql-client -y
-          sudo gem install rspec -N
-          #rspec -e fluent spec/post_deploy.spec
-          rspec spec/post_deploy.spec
+          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+          rake c fluent-aggregator
+          sleep 180
+          rspec spec/post_deploy.spec -e fluent-aggregator
+          rake d fluent-aggregator
+      - name: test kafka
+        env:
+          ENV: ${{ github.ref_name }}
+        run: |
+          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+          rake c kafka
+          sudo apt install ruby libssl-dev g++ ruby-dev make -y # for kafka
+          sudo gem install rdkafka # for kafka
+          #sleep 180
+          #rspec spec/post_deploy.spec -e kafka
+          rake d kafka
+      - name: test database
+        env:
+          ENV: ${{ github.ref_name }}
+        run: |
+          export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
+          rake c database
+          sudo apt install mysql-client -y
+          sleep 180
+          rspec spec/post_deploy.spec -e database
+

@@ -22,6 +22,10 @@ nodes:
     hostPort: 30002
     listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
     protocol: tcp # Optional, defaults to tcp
+  - containerPort: 30004 # for kafka
+    hostPort: 30004
+    listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
+    protocol: tcp # Optional, defaults to tcp
   - containerPort: 30080 # for istio(http)
     hostPort: 30080
     listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
