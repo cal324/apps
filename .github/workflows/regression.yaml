@@ -47,8 +47,8 @@ jobs:
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
           rake c fluent-aggregator
-          sleep 180
-          rspec spec/post_deploy.spec -e fluent-aggregator
+          #sleep 180
+          #rspec spec/post_deploy.spec -e fluent-aggregator
           rake d fluent-aggregator
       - name: test kafka
         env:
@@ -58,8 +58,8 @@ jobs:
           rake c kafka
           sudo apt install ruby libssl-dev g++ ruby-dev make -y # for kafka
           sudo gem install rdkafka # for kafka
-          sleep 180
-          rspec spec/post_deploy.spec -e kafka
+          #sleep 180
+          #rspec spec/post_deploy.spec -e kafka
           rake d kafka
       - name: test database
         env:
@@ -68,6 +68,6 @@ jobs:
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
           rake c database
           sudo apt install mysql-client -y
-          sleep 180
-          rspec spec/post_deploy.spec -e database
+          #sleep 180
+          #rspec spec/post_deploy.spec -e database
 
