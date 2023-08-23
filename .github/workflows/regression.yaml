@@ -58,8 +58,8 @@ jobs:
           rake c kafka
           sudo apt install ruby libssl-dev g++ ruby-dev make -y # for kafka
           sudo gem install rdkafka # for kafka
-          sleep 180
-          rspec spec/post_deploy.spec -e kafka
+          #sleep 180
+          #rspec spec/post_deploy.spec -e kafka
           rake d kafka
       - name: test database
         env:

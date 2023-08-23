@@ -1,4 +1,3 @@
-require 'rdkafka'
 require 'json'
 
 def get_prometheus_metrics(query)
@@ -36,6 +35,7 @@ RSpec.describe 'Confirmation of post-deploy operation' do
   end
 
   it 'kafka: Ability to communicate' do
+    require 'rdkafka'
     config = {
       :"bootstrap.servers" => "127.0.0.1:30004",
     }
