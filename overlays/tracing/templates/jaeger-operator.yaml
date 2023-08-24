@@ -19,9 +19,9 @@ spec:
     targetRevision: 2.46.2
     helm:
       valueFiles:
-      - "$values/overlays/tracing/files/{{ .Values.destination.kubernetes }}_jaeger-operator.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
-    targetRevision: "{{ .Values.source.targetRevision }}"
+      - "$values/{{ .Values.values.path }}/jaeger-operator.yaml"
+  - repoURL: "{{ .Values.values.repoURL }}"
+    targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
   syncPolicy:
     syncOptions:

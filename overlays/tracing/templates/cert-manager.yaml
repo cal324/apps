@@ -19,9 +19,9 @@ spec:
     targetRevision: v1.12.3
     helm:
       valueFiles:
-      - "$values/overlays/tracing/files/{{ .Values.destination.kubernetes }}_cert-manager.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
-    targetRevision: "{{ .Values.source.targetRevision }}"
+      - "$values/{{ .Values.values.path }}/cert-manager.yaml"
+  - repoURL: "{{ .Values.values.repoURL }}"
+    targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
   syncPolicy:
     syncOptions:

@@ -19,9 +19,9 @@ spec:
     targetRevision: v1.5.0
     helm:
       valueFiles:
-      - "$values/overlays/database/files/{{ .Values.destination.kubernetes }}_tidb-operator.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
-    targetRevision: "{{ .Values.source.targetRevision }}"
+      - "$values/{{ .Values.values.path }}/tidb-operator.yaml"
+  - repoURL: "{{ .Values.values.repoURL }}"
+    targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
   syncPolicy:
     syncOptions:

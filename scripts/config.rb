@@ -24,14 +24,6 @@ def get_version_from_app_yaml(app_yaml_name)
   end
 end
 
-def write_sample_yaml()
-  %w(production development).product(%w(kind capz aks)).each do |env, cluster|
-    branch = (env == 'production' ? 'main' : 'develop' )
-    yaml = ERB.new(File.read('sample.yaml')).result(binding)
-    YAML.dump(YAML.safe_load(yaml), File.open("../sample/#{env}_#{cluster}.yaml", 'w'))
-  end
-end
-
 CONFIG_FILE = 'values.yaml'.freeze
 TEMPLATE_FILE = 'template.yaml'.freeze
 
@@ -55,5 +47,3 @@ config['values'].each do |value|
   end
 end
 
-puts "write sample ..."
-write_sample_yaml

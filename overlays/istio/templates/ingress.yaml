@@ -19,9 +19,9 @@ spec:
     targetRevision: 1.18.2
     helm:
       valueFiles:
-      - "$values/overlays/istio/files/{{ .Values.destination.kubernetes }}_ingress.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
-    targetRevision: "{{ .Values.source.targetRevision }}"
+      - "$values/{{ .Values.values.path }}/ingress.yaml"
+  - repoURL: "{{ .Values.values.repoURL }}"
+    targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
   syncPolicy:
     syncOptions: 

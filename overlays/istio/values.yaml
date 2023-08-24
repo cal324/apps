@@ -5,3 +5,7 @@ destination:
 source:
   targetRevision: develop
   repoURL: https://github.com/cal324/apps.git
+values:
+  targetRevision: develop
+  repoURL: https://github.com/cal324/apps.git
+  path: overlays/istio/files

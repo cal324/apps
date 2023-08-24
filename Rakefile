@@ -1,7 +1,7 @@
 require 'json'
+require 'yaml'
+require 'erb'
 require 'rake'
-
-task 'default' => 'develop:kind:base'
 
 $tasks = []
 $mutex = Mutex.new
@@ -38,6 +38,7 @@ end
 task 'aks' do
 end
 
+# Tasks for waiting when tasks are started in parallel
 (1..5).each do |i|
   task ('wave' + i.to_s) do
     puts "wave#{i} ..."
@@ -49,10 +50,12 @@ end
 apps = %w(istio monitoring tracing fluent-aggregator database rook kafka)
 
 apps.each do |name|
+  # sequential processing
   task name do |task|
     execute_task task.name
   end
 
+  # parallel processing
   task ('@' + name) do |task|
     $tasks << Thread.new do
       execute_task (task.name.gsub(/@/,''))
@@ -60,51 +63,42 @@ apps.each do |name|
   end
 end
 
-namespace :develop do
-  namespace :kind do
-    task :all => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @database @kafka wave2)
-    task :base => %w(kind argocd istio monitoring)
-    task :perf => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @kafka wave2)
-  end
-  namespace :capz do
-    task :all => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @database @kafka wave3)
-    task :base => %w(cluster_api capz argocd @istio @rook wave1 monitoring)
-    task :perf => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @kafka wave3)
-  end
-  namespace :aks do
-    task :all => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @database @kafka wave2)
-    task :base => %w(aks argocd istio monitoring)
-    task :perf => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @kafka wave2)
-  end
+# Definition of tasks to build the entire environment(ex. default, deployment, production ...)
+$config = YAML.load(open('scripts/config.yaml'))
+$config['configs'].each do |env|
+  task env['name'] => env['tasks']
 end
 
-namespace :main do
-  namespace :kind do
-    task :all => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @database @kafka wave2)
-    task :base => %w(kind argocd istio monitoring)
-    task :perf => %w(kind argocd istio @tracing @monitoring wave1 @fluent-aggregator @kafka wave2)
+# default: Revision specifies the current branch
+# environment (ex. development, production ...): Follow config.yaml
+# other: Determined by task dependencies
+#        Direct execution from the rake command line => The default task settings are applied
+#        Calls from dependencies => Dependency task settings are applied
+def replace(name)
+  top_level_tasks = Rake.application.top_level_tasks[0]
+  config = $config['configs'].select{|config|config['name'] == top_level_tasks}[0]
+  config = $config['configs'].select{|config|config['name'] == 'default'}[0] if config == nil
+  if config['name'] == 'default'
+    config['targetrevision'] = `git branch --show-current`
+    config['values_targetrevision'] = `git branch --show-current`
   end
-  namespace :capz do
-    task :all => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @database @kafka wave3)
-    task :base => %w(cluster_api capz argocd @istio @rook wave1 monitoring)
-    task :perf => %w(cluster_api capz argocd @istio @rook wave1 @tracing @monitoring wave2 @fluent-aggregator @kafka wave3)
-  end
-  namespace :aks do
-    task :all => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @database @kafka wave2)
-    task :base => %w(aks argocd istio monitoring)
-    task :perf => %w(aks argocd istio @tracing @monitoring wave1 @fluent-aggregator @kafka wave2)
+  yaml = ERB.new(File.read('scripts/sample.yaml')).result(binding)
+  File.open('/tmp/app.yaml', 'w') do |file|
+    YAML.dump(YAML.safe_load(yaml), file)
   end
 end
 
 def execute_task(name)
-  branch, kubernetes = Rake.application.top_level_tasks[0].split(':')
+  replace(name)
+  puts `cat /tmp/app.yaml`
+  # The default is create, and if delete is specified in the rake command line argument
   if $command == 'create'
-    puts `erb revesion=#{branch} kubernetes=#{kubernetes} sample/#{name}.yaml | kubectl apply -f -`
+    puts `kubectl apply -f /tmp/app.yaml`
     sleep 5
     Applications.new(name).wait
     #puts `rspec -e #{name} spec/post_deploy.spec`
   else $command == 'delete'
-    puts `erb revesion=#{branch} kubernetes=#{kubernetes} sample/#{name}.yaml | kubectl delete -f -`
+    puts `kubectl delete -f /tmp/app.yaml`
   end
 end
 

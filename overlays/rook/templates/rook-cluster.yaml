@@ -19,9 +19,9 @@ spec:
     targetRevision: v1.12.2
     helm:
       valueFiles:
-      - "$values/overlays/rook/files/{{ .Values.destination.kubernetes }}_rook-cluster.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
-    targetRevision: "{{ .Values.source.targetRevision }}"
+      - "$values/{{ .Values.values.path }}/rook-cluster.yaml"
+  - repoURL: "{{ .Values.values.repoURL }}"
+    targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
   syncPolicy:
     syncOptions: 
