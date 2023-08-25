@@ -19,9 +19,9 @@ spec:
     targetRevision: 5.14.1
     helm:
       valueFiles:
-      - "$values/overlays/monitoring/files/{{ .Values.destination.kubernetes }}_loki.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
-    targetRevision: "{{ .Values.source.targetRevision }}"
+      - "$values/{{ .Values.values.path }}/monitoring/loki.yaml"
+  - repoURL: "{{ .Values.values.repoURL }}"
+    targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
   syncPolicy:
     syncOptions:
