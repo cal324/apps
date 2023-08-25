@@ -22,7 +22,7 @@ spec:
       - name: values.repoURL
         value: <%= config['values_repourl'] %>
       - name: values.path
-        value: <%= config['values_path'] + "/#{name}" %>
+        value: <%= config['values_path'] %>
   syncPolicy:
     syncOptions: 
     automated:

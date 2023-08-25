@@ -29,4 +29,4 @@ configs:
   values_targetrevision: production
   values_repourl: https://github.com/cal324/apps.git
   values_path: configs/production
-  tasks: [kind, argocd, istio, "@tracing", "@monitoring", wave1, "@fluent-aggregator", "@database", "@kafka", wave2]
+  tasks: [aks, argocd, istio, "@tracing", "@monitoring", wave1, "@fluent-aggregator", "@database", "@kafka", wave2]

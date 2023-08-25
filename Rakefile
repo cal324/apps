@@ -90,7 +90,6 @@ end
 
 def execute_task(name)
   replace(name)
-  puts `cat /tmp/app.yaml`
   # The default is create, and if delete is specified in the rake command line argument
   if $command == 'create'
     puts `kubectl apply -f /tmp/app.yaml`
