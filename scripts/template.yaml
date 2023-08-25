@@ -21,23 +21,15 @@ spec:
     targetRevision: <%= param['source-targetRevision'] %>
     helm:
       valueFiles:
-        - $values/<%= common['path'] %>/files/<%= '{{' %> <%= global['destination-kubernetes'] %> <%= '}}' %>_<%= app_name %>.yaml
-  - repoURL: "<%= '{{' %> <%= global['source-repoURL'] %> <%= '}}' %>"
-    targetRevision: "<%= '{{' %> <%= global['source-targetRevision'] %> <%= '}}' %>"
+        - $values/<%= '{{' %> <%= global['values-path'] %> <%= '}}' %>/<%= group %>/<%= app_name %>.yaml
+  - repoURL: "<%= '{{' %> <%= global['values-repoURL'] %> <%= '}}' %>"
+    targetRevision: "<%= '{{' %> <%= global['values-values-targetRevision'] %> <%= '}}' %>"
     ref: values
 <% elsif param['type'] == 'kustomization' %>
   source:
     repoURL: "<%= '{{' %> <%= global['source-repoURL'] %> <%= '}}' %>"
     path: <%= param['source-path'] %>
     targetRevision: "<%= '{{' %> <%= global['source-targetRevision'] %> <%= '}}' %>"
-<% if group == 'kind' or group == 'aks' or group == 'capz' %>
-    helm:
-      parameters:
-        - name: source.targetRevision
-          value: "<%= '{{' %> <%= global['source-targetRevision'] %> <%= '}}' %>"
-        - name: destination.kubernetes
-          value: "<%= '{{' %> <%= global['destination-kubernetes'] %> <%= '}}' %>"
-<% end %>
 <% end %>
   syncPolicy:
     syncOptions:
