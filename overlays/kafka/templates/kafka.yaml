@@ -19,9 +19,9 @@ spec:
     targetRevision: 0.36.1
     helm:
       valueFiles:
-      - "$values/overlays/kafka/files/{{ .Values.destination.kubernetes }}_kafka.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
-    targetRevision: "{{ .Values.source.targetRevision }}"
+      - "$values/{{ .Values.values.path }}/kafka/kafka.yaml"
+  - repoURL: "{{ .Values.values.repoURL }}"
+    targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
   syncPolicy:
     syncOptions: 
