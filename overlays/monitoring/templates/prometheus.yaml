@@ -19,9 +19,9 @@ spec:
     targetRevision: 48.3.3
     helm:
       valueFiles:
-      - "$values/overlays/monitoring/files/{{ .Values.destination.kubernetes }}_prometheus.yaml"
-  - repoURL: "{{ .Values.source.repoURL }}"
-    targetRevision: "{{ .Values.source.targetRevision }}"
+      - "$values/{{ .Values.values.path }}/monitoring/prometheus.yaml"
+  - repoURL: "{{ .Values.values.repoURL }}"
+    targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
   syncPolicy:
     syncOptions:
