@@ -19,7 +19,7 @@ spec:
     targetRevision: 0.37.1
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/fluentbit.yaml"
+      - "$values/{{ .Values.values.path }}/fluent-aggregator/fluentbit.yaml"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values

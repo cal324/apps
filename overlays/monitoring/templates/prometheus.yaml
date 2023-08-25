@@ -19,7 +19,7 @@ spec:
     targetRevision: 48.3.3
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/prometheus.yaml"
+      - "$values/{{ .Values.values.path }}/monitoring/prometheus.yaml"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values

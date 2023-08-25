@@ -19,7 +19,7 @@ spec:
     targetRevision: 2.46.2
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/jaeger-operator.yaml"
+      - "$values/{{ .Values.values.path }}/tracing/jaeger-operator.yaml"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values

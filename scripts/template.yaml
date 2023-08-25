@@ -21,7 +21,7 @@ spec:
     targetRevision: <%= param['source-targetRevision'] %>
     helm:
       valueFiles:
-        - $values/<%= '{{' %> <%= global['values-path'] %> <%= '}}' %>/<%= app_name %>/<%= app_name %>.yaml
+        - $values/<%= '{{' %> <%= global['values-path'] %> <%= '}}' %>/<%= group %>/<%= app_name %>.yaml
   - repoURL: "<%= '{{' %> <%= global['values-repoURL'] %> <%= '}}' %>"
     targetRevision: "<%= '{{' %> <%= global['values-values-targetRevision'] %> <%= '}}' %>"
     ref: values

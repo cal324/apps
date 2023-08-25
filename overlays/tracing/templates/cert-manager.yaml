@@ -19,7 +19,7 @@ spec:
     targetRevision: v1.12.3
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/cert-manager.yaml"
+      - "$values/{{ .Values.values.path }}/tracing/cert-manager.yaml"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values

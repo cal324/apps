@@ -19,7 +19,7 @@ spec:
     targetRevision: v1.5.0
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/tidb-operator.yaml"
+      - "$values/{{ .Values.values.path }}/database/tidb-operator.yaml"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values

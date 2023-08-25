@@ -19,7 +19,7 @@ spec:
     targetRevision: 1.18.2
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/istiod.yaml"
+      - "$values/{{ .Values.values.path }}/istio/istiod.yaml"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
