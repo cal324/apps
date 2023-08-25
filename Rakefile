@@ -83,7 +83,7 @@ def replace(name)
     config['values_targetrevision'] = `git branch --show-current`
   end
   yaml = ERB.new(File.read('scripts/sample.yaml')).result(binding)
-  File.open('/tmp/app.yaml', 'w') do |file|
+  File.open("/tmp/#{name}.yaml", 'w') do |file|
     YAML.dump(YAML.safe_load(yaml), file)
   end
 end
@@ -92,12 +92,12 @@ def execute_task(name)
   replace(name)
   # The default is create, and if delete is specified in the rake command line argument
   if $command == 'create'
-    puts `kubectl apply -f /tmp/app.yaml`
+    puts `kubectl apply -f /tmp/#{name}.yaml`
     sleep 5
     Applications.new(name).wait
     #puts `rspec -e #{name} spec/post_deploy.spec`
   else $command == 'delete'
-    puts `kubectl delete -f /tmp/app.yaml`
+    puts `kubectl delete -f /tmp/#{name}.yaml`
   end
 end
 
