@@ -64,7 +64,7 @@ apps.each do |name|
 end
 
 # Definition of tasks to build the entire environment(ex. default, deployment, production ...)
-$config = YAML.load(open('scripts/config.yaml'))
+$config = YAML.load(open('config.yaml'))
 $config['configs'].each do |env|
   task env['name'] => env['tasks']
 end
