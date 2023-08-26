@@ -80,7 +80,7 @@ def replace(name)
     config['targetrevision'] = `git branch --show-current`
     config['values_targetrevision'] = `git branch --show-current`
   end
-  yaml = ERB.new(File.read('scripts/sample.yaml')).result(binding)
+  yaml = ERB.new(File.read('scripts/applications.yaml')).result(binding)
   File.open("/tmp/#{name}.yaml", 'w') do |file|
     YAML.dump(YAML.safe_load(yaml), file)
   end
