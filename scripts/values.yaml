@@ -61,14 +61,6 @@ values:
         source-chart: kube-prometheus-stack
         syncPolicy-syncOptions-ServerSideApply: true
 
-      loki:
-        type: helm
-        metadata-annotations-sync-wave: 3
-        destination-namespace: monitoring
-        source-repoURL: https://grafana.github.io/helm-charts
-        source-chart: loki
-        syncPolicy-syncOptions-ServerSideApply: true
-
       namespace:
         type: kustomization
         metadata-annotations-sync-wave: 1
@@ -83,6 +75,25 @@ values:
         type: kustomization
         metadata-annotations-sync-wave: 3
         source-path: overlays/monitoring/monitor
+
+  - log-analytics:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/log-analytics
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/log-analytics/namespace
+
+      loki:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: log-analytics
+        source-repoURL: https://grafana.github.io/helm-charts
+        source-chart: loki
+        syncPolicy-syncOptions-ServerSideApply: true
 
   - tracing:
       common:

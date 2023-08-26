@@ -13,7 +13,7 @@ configs:
   values_targetrevision: develop
   values_repourl: https://github.com/cal324/apps.git
   values_path: configs/development
-  tasks: [kind, argocd, istio, "@tracing", "@monitoring", wave1, "@fluent-aggregator", "@database", "@kafka", wave2]
+  tasks: [kind, argocd, istio, "@tracing", "@monitoring", "@log-analytics", wave1, "@fluent-aggregator", "@database", "@kafka", wave2]
 - name: performance
   deployment: performance
   targetrevision: main
@@ -21,7 +21,7 @@ configs:
   values_targetrevision: main
   values_repourl: https://github.com/cal324/apps.git
   values_path: configs/performance
-  tasks: [cluster_api, capz, argocd, "@istio", "@rook", wave1, "@tracing", "@monitoring", wave2, "@fluent-aggregator", "@database", "@kafka", wave3]
+  tasks: [cluster_api, capz, argocd, "@istio", "@rook", wave1, "@tracing", "@monitoring", "@log-analytics", wave2, "@fluent-aggregator", "@database", "@kafka", wave3]
 - name: production
   deployment: production
   targetrevision: main
@@ -29,4 +29,4 @@ configs:
   values_targetrevision: main
   values_repourl: https://github.com/cal324/apps.git
   values_path: configs/production
-  tasks: [aks, argocd, istio, "@tracing", "@monitoring", wave1, "@fluent-aggregator", "@database", "@kafka", wave2]
+  tasks: [aks, argocd, istio, "@tracing", "@monitoring", "@log-analytics", wave1, "@fluent-aggregator", "@database", "@kafka", wave2]

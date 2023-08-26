@@ -71,7 +71,7 @@ fileConfigs:
   04_outputs.conf: |-
     <match **>
       @type loki
-      url http://loki-gateway.monitoring.svc
+      url http://loki-gateway.log-analytics.svc
       extra_labels {"env":"dev"}
       flush_interval 1s
       flush_at_shutdown true
