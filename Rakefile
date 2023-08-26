@@ -25,7 +25,7 @@ task 'argocd' do
 end
 
 task 'kind' do
-  puts `FILE=spec/kind_config.yaml; kind create cluster --config=$FILE`
+  puts `unset KUBECONFIG; FILE=spec/kind_config.yaml; kind create cluster --config=$FILE`
   puts `kubectl cluster-info --context kind-kind`
 end
 
