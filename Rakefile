@@ -47,9 +47,7 @@ end
   end
 end
 
-apps = %w(istio monitoring tracing fluent-aggregator database rook kafka)
-
-apps.each do |name|
+`ls overlays`.split.each do |name|
   # sequential processing
   task name do |task|
     execute_task task.name
