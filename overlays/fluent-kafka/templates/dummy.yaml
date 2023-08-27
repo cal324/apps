@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fluent-aggregator-dummy
+  name: fluent-kafka-dummy
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '1'
@@ -11,11 +11,11 @@ metadata:
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: logging
+    namespace: fluent-kafka
   project: "{{ .Values.project }}"
   source:
     repoURL: "{{ .Values.source.repoURL }}"
-    path: overlays/fluent-aggregator/dummy
+    path: overlays/fluent-kafka/dummy
     targetRevision: "{{ .Values.source.targetRevision }}"
   syncPolicy:
     syncOptions: 

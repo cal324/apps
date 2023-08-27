@@ -15,13 +15,13 @@ end
 
 RSpec.describe 'Confirmation of post-deploy operation' do
 
-  it 'fluent-aggregator: Ability to reference fluentd information in prometheus.' do
+  it 'logging: Ability to reference fluentd information in prometheus.' do
     values = get_prometheus_metrics 'fluentd_output_status_emit_count{type="loki"}'
     expect(values.count).to be >= 1
     expect(values.last[1].to_i).to be >= 1
   end
 
-  it 'fluent-aggregator: Ability to reference fluent-bit information in prometheus.' do
+  it 'logging: Ability to reference fluent-bit information in prometheus.' do
     values = get_prometheus_metrics 'fluentbit_output_proc_records_total'
     expect(values.count).to be >= 1
     expect(values.last[1].to_i).to be >= 1

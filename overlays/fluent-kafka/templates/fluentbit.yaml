@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fluent-aggregator-fluentbit
+  name: fluent-kafka-fluentbit
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '3'
@@ -11,7 +11,7 @@ metadata:
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: logging
+    namespace: fluent-kafka
   project: "{{ .Values.project }}"
   sources:
   - repoURL: https://fluent.github.io/helm-charts
@@ -19,7 +19,7 @@ spec:
     targetRevision: 0.37.1
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/fluent-aggregator/fluentbit.yaml"
+      - "$values/{{ .Values.values.path }}/fluent-kafka/fluentbit.yaml"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values

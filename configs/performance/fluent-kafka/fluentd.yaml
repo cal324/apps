@@ -1,4 +1,6 @@
 kind: "StatefulSet"
+image:
+  tag: "v1.16.2-debian-kafka2-1.0"
 podSecurityPolicy:
   enabled: false
 service:
@@ -6,9 +8,6 @@ service:
    - name: "forwarder"
      protocol: TCP
      containerPort: 24224
-   - name: "http"
-     protocol: TCP
-     containerPort: 8080
 metrics:
   serviceMonitor:
     enabled: true
@@ -39,40 +38,34 @@ metrics:
         annotations:
           summary: "Fluentd Scrape Missing"
           description: "Fluentd instance has disappeared from Prometheus target discovery"
-dashboards:
-  enabled: "true"
-  namespace: "monitoring"
-plugins: 
-  - fluent-plugin-grafana-loki
 configMapConfigs:
   - fluentd-prometheus-conf
 fileConfigs:
   01_sources.conf: |-
     <source>
       @type dummy
-      dummy {"generate":"aggregator"}
-      tag test
+      dummy {"watchdog": "fluentd"}
+      tag watchdog
     </source>
 
     <source>
       @type forward
     </source>
     
-    <source>
-      @type http
-      port 8080
-      bind 0.0.0.0
-    </source>
-
   02_filters.conf: |-
 
   03_dispatch.conf: |-
 
   04_outputs.conf: |-
     <match **>
-      @type loki
-      url http://loki-gateway.log-analytics.svc
-      extra_labels {"env":"dev"}
-      flush_interval 1s
-      flush_at_shutdown true
+      @type rdkafka2
+      brokers "my-cluster-kafka-external-bootstrap.kafka.svc.cluster.local:9094"
+      topic_key my-topic
+      default_topic my-topic
+      <buffer>
+        flush_interval 1s
+      </buffer>
+      <format>
+        @type "json"
+      </format>
     </match>

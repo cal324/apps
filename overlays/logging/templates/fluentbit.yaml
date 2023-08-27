@@ -2,10 +2,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fluent-aggregator-fluentd
+  name: logging-fluentbit
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: '2'
+    argocd.argoproj.io/sync-wave: '3'
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
@@ -15,11 +15,11 @@ spec:
   project: "{{ .Values.project }}"
   sources:
   - repoURL: https://fluent.github.io/helm-charts
-    chart: fluentd
-    targetRevision: 0.4.3
+    chart: fluent-bit
+    targetRevision: 0.37.1
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/fluent-aggregator/fluentd.yaml"
+      - "$values/{{ .Values.values.path }}/logging/fluentbit.yaml"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values

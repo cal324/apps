@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: log-analytics-loki
+  name: fluent-kafka-fluentd
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '2'
@@ -11,21 +11,20 @@ metadata:
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: log-analytics
+    namespace: fluent-kafka
   project: "{{ .Values.project }}"
   sources:
-  - repoURL: https://grafana.github.io/helm-charts
-    chart: loki
-    targetRevision: 5.15.0
+  - repoURL: https://fluent.github.io/helm-charts
+    chart: fluentd
+    targetRevision: 0.4.3
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/log-analytics/loki.yaml"
+      - "$values/{{ .Values.values.path }}/fluent-kafka/fluentd.yaml"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
   syncPolicy:
-    syncOptions:
-    - ServerSideApply=true
+    syncOptions: 
     automated:
       prune: true
       selfHeal: true

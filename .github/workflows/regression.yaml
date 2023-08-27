@@ -46,10 +46,10 @@ jobs:
           ENV: ${{ github.ref_name }}
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          rake fluent-aggregator
+          rake logging
           sleep 180
-          rspec spec/post_deploy.spec -e fluent-aggregator
-          rake d fluent-aggregator
+          rspec spec/post_deploy.spec -e logging
+          rake d logging
       - name: test kafka
         env:
           ENV: ${{ github.ref_name }}

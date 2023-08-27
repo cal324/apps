@@ -22,13 +22,12 @@ prometheusRule:
     for: 15m
     labels:
       severity: critical
-dashboards:
-  enabled: true
-  namespace: "monitoring"
 config:
   inputs: |
     [INPUT]
         Name dummy
+        Dummy {"watchdog": "fluent-bit"}
+        Tag watchdog
 
     [INPUT]
         Name tail
@@ -36,9 +35,10 @@ config:
         Tag kube.*
         Mem_Buf_Limit 5MB
         Skip_Long_Lines On
+
   outputs: |
     [OUTPUT]
         Name forward
         Match *
-        Host fluent-aggregator-fluentd.logging.svc
+        Host fluent-kafka-fluentd.fluent-kafka.svc
         Port 24224

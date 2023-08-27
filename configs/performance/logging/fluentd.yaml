@@ -1,0 +1,88 @@
+kind: "StatefulSet"
+podSecurityPolicy:
+  enabled: false
+service:
+  ports: 
+   - name: "forwarder"
+     protocol: TCP
+     containerPort: 24224
+   - name: "http"
+     protocol: TCP
+     containerPort: 8080
+metrics:
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: monitoring-prometheus
+    namespace: "monitoring"
+  prometheusRule:
+    enabled: true
+    additionalLabels: 
+      release: monitoring-prometheus
+    namespace: "monitoring"
+    rules:
+      - alert: FluentdDown
+        expr: up{job="fluentd"} == 0
+        for: 5m
+        labels:
+          context: fluentd
+          severity: warning
+        annotations:
+          summary: "Fluentd Down"
+          description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
+      - alert: FluentdScrapeMissing
+        expr: absent(up{job="fluentd"} == 1)
+        for: 15m
+        labels:
+          context: fluentd
+          severity: warning
+        annotations:
+          summary: "Fluentd Scrape Missing"
+          description: "Fluentd instance has disappeared from Prometheus target discovery"
+dashboards:
+  enabled: "true"
+  namespace: "monitoring"
+plugins: 
+  - fluent-plugin-grafana-loki
+configMapConfigs:
+  - fluentd-prometheus-conf
+fileConfigs:
+  01_sources.conf: |-
+    <source>
+      @type dummy
+      dummy {"watchdog": "fluentd"}
+      tag watchdog
+    </source>
+
+    <source>
+      @type forward
+    </source>
+    
+    <source>
+      @type http
+      port 8080
+      bind 0.0.0.0
+      tag alert
+    </source>
+
+  02_filters.conf: |-
+
+  03_dispatch.conf: |-
+
+  04_outputs.conf: |-
+    <match **>
+      @type loki
+      url http://loki-gateway.log-analytics.svc
+      extract_kubernetes_labels true
+      remove_keys kubernetes
+      line_format json
+      extra_labels {"env":"dev"}
+      <label>
+        pod_name $.kubernetes.pod_name
+        namespace_name $.kubernetes.namespace_name
+        host $.kubernetes.host
+        container_name $.kubernetes.container_name
+      </label>
+      flush_interval 1s
+      flush_at_shutdown true
+    </match>
