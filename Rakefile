@@ -72,6 +72,8 @@ end
 # other: Determined by task dependencies
 #        Direct execution from the rake command line => The default task settings are applied
 #        Calls from dependencies => Dependency task settings are applied
+#
+# values_path: If there is no corresponding config under configs/default, use the location of the contents of config.yaml.
 def replace(name)
   top_level_tasks = Rake.application.top_level_tasks[0]
   config = $config['configs'].select{|config|config['name'] == top_level_tasks}[0]
@@ -79,6 +81,9 @@ def replace(name)
   if config['name'] == 'default'
     config['targetrevision'] = `git branch --show-current`
     config['values_targetrevision'] = `git branch --show-current`
+  end
+  if File.exist?("configs/default/#{name}")
+    config['values_path'] = "configs/default"
   end
   yaml = ERB.new(File.read('scripts/applications.yaml')).result(binding)
   File.open("/tmp/#{name}.yaml", 'w') do |file|
