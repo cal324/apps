@@ -43,7 +43,7 @@ metrics:
           summary: "Fluentd Scrape Missing"
           description: "Fluentd instance has disappeared from Prometheus target discovery"
 dashboards:
-  enabled: "false"
+  enabled: false
 configMapConfigs:
   - fluentd-prometheus-conf
 fileConfigs:
