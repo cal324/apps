@@ -29,6 +29,10 @@ task 'kind' do
   puts `kubectl cluster-info --context kind-kind`
 end
 
+task 'k6' do
+  puts `kustomize build https://github.com/cal324/apps/base/k6/?ref=HEAD | kubectl apply -n argocd -f -`
+end
+
 task 'cluster_api' do
 end
 

@@ -1,0 +1,49 @@
+apiVersion: k6.io/v1alpha1
+kind: K6
+metadata:
+  name: k6-sample
+spec:
+  parallelism: 4
+  arguments: --out experimental-prometheus-rw
+  runner:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+    env:
+      - name: K6_PROMETHEUS_RW_SERVER_URL
+        value: http://monitoring-prometheus-kube-prometheus.monitoring.svc.cluster.local:9090/api/v1/write
+      - name: K6_PROMETHEUS_RW_PUSH_INTERVAL
+        value: 5s
+  script:
+    configMap:
+      name: sample-stress-test
+      file: test.js
+---
+apiVersion: v1
+data:
+  test.js: |
+    import http from 'k6/http';
+    import { check } from 'k6';
+
+    export const options = {
+      scenarios: {
+        per_vu_scenario: {
+          executor: "constant-arrival-rate",
+          duration: '180s',
+          rate: 2000,
+          timeUnit: '1s',
+          preAllocatedVUs: 100,
+        },
+      },
+    };
+
+
+    export default function () {
+      const result = http.get('http://dummy-app.fluent-kafka.svc');
+      check(result, {
+        'http response status code is 200': result.status === 200,
+      });
+    }
+kind: ConfigMap
+metadata:
+  name: sample-stress-test
