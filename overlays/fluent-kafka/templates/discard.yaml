@@ -1,0 +1,30 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fluent-kafka-discard
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '3'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: "{{ .Values.destination.name }}"
+    namespace: fluent-kafka
+  project: "{{ .Values.project }}"
+  sources:
+  - repoURL: https://fluent.github.io/helm-charts
+    chart: fluentd
+    targetRevision: 0.4.3
+    helm:
+      valueFiles:
+      - "$values/{{ .Values.values.path }}/fluent-kafka/discard.yaml"
+  - repoURL: "{{ .Values.values.repoURL }}"
+    targetRevision: "{{ .Values.values.targetRevision }}"
+    ref: values
+  syncPolicy:
+    syncOptions: 
+    automated:
+      prune: true
+      selfHeal: true

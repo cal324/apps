@@ -32,6 +32,7 @@ spec:
       - name: logvol
         hostPath:
           path: /var/log/nginx
+          type: DirectoryOrCreate
       - name: conf
         configMap:
           name: nginx-config

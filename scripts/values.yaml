@@ -203,6 +203,13 @@ values:
         source-repoURL: https://fluent.github.io/helm-charts
         source-chart: fluent-bit
 
+      discard:
+        type: helm
+        metadata-annotations-sync-wave: 3
+        destination-namespace: fluent-kafka
+        source-repoURL: https://fluent.github.io/helm-charts
+        source-chart: fluentd
+
   - database:
       common:
         syncPolicy-automated-prune: true
