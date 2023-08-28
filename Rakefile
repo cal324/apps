@@ -30,7 +30,7 @@ task 'kind' do
 end
 
 task 'k6' do
-  puts `kustomize build https://github.com/cal324/apps/base/k6/?ref=HEAD | kubectl apply -n argocd -f -`
+  puts `kustomize build https://github.com/cal324/apps/base/k6/?ref=HEAD | kubectl apply -f -`
 end
 
 task 'cluster_api' do
