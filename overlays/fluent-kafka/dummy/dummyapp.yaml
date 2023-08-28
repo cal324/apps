@@ -15,12 +15,18 @@ spec:
       containers:
       - name: nginx
         image: nginx
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         ports:
         - containerPort: 80
         volumeMounts:
         - mountPath: /var/log/nginx
           name: logvol
-        - mountPath: /etc/nginx/conf.d/
+          subPathExpr: $(POD_NAME)
+        - mountPath: /etc/nginx/conf.d
           name: conf
       volumes:
       - name: logvol
@@ -57,5 +63,8 @@ data:
       location / {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
+        access_log /var/log/nginx/access.log main;
+        error_log /dev/stderr warn;
       }
     }
+
