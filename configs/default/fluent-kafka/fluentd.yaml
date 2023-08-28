@@ -3,6 +3,10 @@ image:
   tag: "v1.16.2-debian-kafka2-1.0"
 podSecurityPolicy:
   enabled: false
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
 service:
   ports: 
    - name: "forwarder"
