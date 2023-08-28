@@ -25,6 +25,11 @@ prometheusRule:
 dashboards:
   enabled: true
   namespace: "monitoring"
+nodeSelector:
+  kubernetes.io/os: linux
+tolerations:
+- effect: NoSchedule
+  operator: Exists
 config:
   inputs: |
     [INPUT]
