@@ -66,23 +66,50 @@ fileConfigs:
     </source>
 
   02_filters.conf: |-
+    <filter **>
+      @type prometheus
+      <metric>
+        name fluentd_input_status_num_records_total
+        type counter
+        desc The total number of incoming records
+        <labels>
+          tag ${tag}
+          hostname ${hostname}
+        </labels>
+      </metric>
+    </filter>
 
   03_dispatch.conf: |-
 
   04_outputs.conf: |-
     <match **>
-      @type loki
-      url http://loki-gateway.log-analytics.svc
-      extract_kubernetes_labels true
-      remove_keys kubernetes
-      line_format json
-      extra_labels {"env":"dev"}
-      <label>
-        pod_name $.kubernetes.pod_name
-        namespace_name $.kubernetes.namespace_name
-        host $.kubernetes.host
-        container_name $.kubernetes.container_name
-      </label>
-      flush_interval 1s
-      flush_at_shutdown true
+      @type copy
+      <store>
+        @type loki
+        url http://loki-gateway.log-analytics.svc
+        extract_kubernetes_labels true
+        remove_keys kubernetes
+        line_format json
+        extra_labels {"env":"dev"}
+        <label>
+          pod_name $.kubernetes.pod_name
+          namespace_name $.kubernetes.namespace_name
+          host $.kubernetes.host
+          container_name $.kubernetes.container_name
+        </label>
+        flush_interval 1s
+        flush_at_shutdown true
+      </store>
+      <store>
+        @type prometheus
+        <metric>
+          name fluentd_output_status_num_records_total
+          type counter
+          desc The total number of outgoing records
+          <labels>
+            tag ${tag}
+            hostname ${hostname}
+          </labels>
+        </metric>
+      </store>
     </match>
