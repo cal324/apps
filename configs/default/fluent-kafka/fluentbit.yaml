@@ -40,9 +40,24 @@ config:
         Mem_Buf_Limit 5MB
         Skip_Long_Lines On
 
+  filters: |
+    [FILTER]
+        Name parser
+        Match nginx
+        Key_Name log
+        Parser x-b3-nginx
+
   outputs: |
     [OUTPUT]
         Name forward
         Match *
         Host fluent-kafka-fluentd.fluent-kafka.svc
         Port 24224
+
+  customParsers: |
+    [PARSER]
+        Name x-b3-nginx
+        Format regex
+        Regex ^(?<remote>\S*) (?<host>\S*) (?<user>\S*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?:\s+\S*)?)?" (?<code>\S*) (?<size>\S*) "(?<referer>[^\"]*)" "(?<agent>[^\"]*)" "(?<http_x_forwarded_for>[^\"]*)" "(?<x_b3_traceid>[^\"]*)" "(?<x_b3_spanid>[^\"]*)" "(?<x_b3_parentspanid>[^\"]*)" "(?<x_b3_sampled>[^\"]*)"$
+        Time_Key time
+        Time_Format %d/%b/%Y:%H:%M:%S %z

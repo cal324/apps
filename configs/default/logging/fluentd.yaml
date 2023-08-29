@@ -9,6 +9,11 @@ service:
    - name: "http"
      protocol: TCP
      containerPort: 8080
+persistence:
+  enabled: true
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 10Gi
 metrics:
   serviceMonitor:
     enabled: true
@@ -97,8 +102,12 @@ fileConfigs:
           host $.kubernetes.host
           container_name $.kubernetes.container_name
         </label>
-        flush_interval 1s
+        flush_interval 5s
         flush_at_shutdown true
+        <buffer>
+          @type file
+          path /var/log/fluent/loki
+        </buffer>
       </store>
       <store>
         @type prometheus

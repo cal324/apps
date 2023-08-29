@@ -66,18 +66,18 @@ end
 end
 
 # Definition of tasks to build the entire environment(ex. default, deployment, production ...)
-$config = YAML.load(open('config.yaml'))
+$config = YAML.load(open('rake_config.yaml'))
 $config['configs'].each do |env|
   task env['name'] => env['tasks']
 end
 
 # default: Revision specifies the current branch
-# environment (ex. development, production ...): Follow config.yaml
+# environment (ex. development, production ...): Follow rake_config.yaml
 # other: Determined by task dependencies
 #        Direct execution from the rake command line => The default task settings are applied
 #        Calls from dependencies => Dependency task settings are applied
 #
-# values_path: If there is no corresponding config under configs/default, use the location of the contents of config.yaml.
+# values_path: If there is no corresponding config under configs/default, use the location of the contents of rake_config.yaml.
 def replace(name)
   top_level_tasks = Rake.application.top_level_tasks[0]
   config = $config['configs'].select{|config|config['name'] == top_level_tasks}[0]

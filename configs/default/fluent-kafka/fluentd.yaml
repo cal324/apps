@@ -72,9 +72,31 @@ fileConfigs:
       </metric>
     </filter>
 
+    <filter tracing>
+      @type record_transformer
+      enable_ruby true
+      <record>
+        name "Fluentd:output"
+        traceId ${record["x_b3_traceid"]}
+        parentId ${record["x_b3_spanid"]}
+        timestamp ${t=Time.now;t.to_i*1_000_000+t.usec}
+        id "0000000000000001"
+        duration ${1}
+      </record>
+      remove_keys remote,host,user,method,path,code,size,referer,agent,http_x_forwarded_for,x_b3_traceid,x_b3_spanid,x_b3_parentspanid,x_b3_sampled
+    </filter>
+
   03_dispatch.conf: |-
 
   04_outputs.conf: |-
+    <match tracing>
+      @type http
+      endpoint http://simplest-collector.tracing.svc.cluster.local:9411/api/v2/spans
+      http_method post
+      json_array true
+      headers {"Content-Type":"application/json"}
+    </match>
+
     <match **>
       @type copy
       <store>
@@ -82,12 +104,22 @@ fileConfigs:
         brokers "my-cluster-kafka-external-bootstrap.kafka.svc.cluster.local:9094"
         topic_key my-topic
         default_topic my-topic
+        flush_interval 1s
         <buffer>
-          flush_interval 1s
+          @type file
+          path /var/log/fluent/kafka
         </buffer>
         <format>
           @type "json"
         </format>
+      </store>
+      <store>
+        @type rewrite_tag_filter
+        <rule>
+          key x_b3_sampled
+          pattern /^1$/
+          tag tracing
+        </rule>
       </store>
       <store>
         @type prometheus
@@ -102,3 +134,4 @@ fileConfigs:
         </metric>
       </store>
     </match>
+
