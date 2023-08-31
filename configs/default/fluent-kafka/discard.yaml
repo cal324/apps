@@ -1,12 +1,6 @@
 kind: "StatefulSet"
-image:
-  tag: "v1.16.2-debian-kafka2-1.0"
 podSecurityPolicy:
   enabled: false
-resources:
-  limits:
-    cpu: 100m
-    memory: 128Mi
 service:
   ports: 
    - name: "forwarder"
@@ -44,6 +38,20 @@ metrics:
           description: "Fluentd instance has disappeared from Prometheus target discovery"
 dashboards:
   enabled: false
+
+# Resource Configuration
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+# Using Kubelet to Get Metadata
+podAnnotations:
+  fluentbit.io/parser: fluentd_parser
+
+# configs
+image:
+  tag: "v1.16.2-debian-kafka2-1.0"
 configMapConfigs:
   - fluentd-prometheus-conf
 fileConfigs:

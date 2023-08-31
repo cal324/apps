@@ -9,11 +9,6 @@ service:
    - name: "http"
      protocol: TCP
      containerPort: 8080
-persistence:
-  enabled: true
-  storageClass: ""
-  accessMode: ReadWriteOnce
-  size: 10Gi
 metrics:
   serviceMonitor:
     enabled: true
@@ -47,6 +42,19 @@ metrics:
 dashboards:
   enabled: "true"
   namespace: "monitoring"
+
+# Resource Configuration
+persistence:
+  enabled: true
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 10Gi
+
+# Using Kubelet to Get Metadata
+podAnnotations:
+  fluentbit.io/parser: fluentd_parser
+
+# configs
 plugins: 
   - fluent-plugin-grafana-loki
 configMapConfigs:
@@ -67,7 +75,6 @@ fileConfigs:
       @type http
       port 8080
       bind 0.0.0.0
-      tag alert
     </source>
 
   02_filters.conf: |-
@@ -93,20 +100,21 @@ fileConfigs:
         @type loki
         url http://loki-gateway.log-analytics.svc
         extract_kubernetes_labels true
-        remove_keys kubernetes
-        line_format json
+        remove_keys kubernetes,stream,time,_p
+        drop_single_key true
         extra_labels {"env":"dev"}
         <label>
           pod_name $.kubernetes.pod_name
           namespace_name $.kubernetes.namespace_name
           host $.kubernetes.host
           container_name $.kubernetes.container_name
+          loglevel $.loglevel
         </label>
         flush_interval 5s
-        flush_at_shutdown true
         <buffer>
           @type file
           path /var/log/fluent/loki
+          flush_at_shutdown true
         </buffer>
       </store>
       <store>

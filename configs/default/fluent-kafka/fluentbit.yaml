@@ -22,10 +22,20 @@ prometheusRule:
     for: 15m
     labels:
       severity: critical
+dashboards:
+  enabled: false
+
+# Resource Configuration
 resources:
   limits:
     cpu: 100m
     memory: 128Mi
+
+# Using Kubelet to Get Metadata
+podAnnotations:
+  fluentbit.io/parser: fluentbit_parser
+
+# configs
 config:
   inputs: |
     [INPUT]
