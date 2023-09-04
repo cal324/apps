@@ -30,7 +30,7 @@ data:
         per_vu_scenario: {
           executor: "constant-arrival-rate",
           duration: '180s',
-          rate: 2000,
+          rate: 1000,
           timeUnit: '1s',
           preAllocatedVUs: 100,
         },

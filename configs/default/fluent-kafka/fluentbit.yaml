@@ -39,11 +39,6 @@ podAnnotations:
 config:
   inputs: |
     [INPUT]
-        Name dummy
-        Dummy {"watchdog": "fluent-bit"}
-        Tag watchdog
-
-    [INPUT]
         Name tail
         Path /var/log/nginx/*/access.log
         Tag nginx

@@ -62,12 +62,6 @@ configMapConfigs:
 fileConfigs:
   01_sources.conf: |-
     <source>
-      @type dummy
-      dummy {"watchdog": "fluentd"}
-      tag watchdog
-    </source>
-
-    <source>
       @type forward
     </source>
     
@@ -123,7 +117,8 @@ fileConfigs:
           path /var/log/fluent/kafka
         </buffer>
         <format>
-          @type "json"
+          @type avro
+          schema_json {"type":"record","name":"sampleRecord","namespace":"com.mycorp.mynamespace","fields":[{"name": "remote", "type": "string"},{"name": "host", "type": "string"},{"name": "user", "type": "string"},{"name": "method", "type":"string"},{"name": "path", "type": "string"},{"name": "code", "type": "string"},{"name": "size", "type": "string"},{"name": "referer", "type": "string"},{"name": "agent", "type": "string"},{"name":"http_x_forwarded_for", "type": "string"},{"name": "x_b3_traceid", "type": "string"},{"name": "x_b3_spanid", "type": "string"},{"name":"x_b3_parentspanid", "type": "string"},{"name": "x_b3_sampled", "type": "string"}]}
         </format>
       </store>
       <store>

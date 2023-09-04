@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: log-analytics
   labels:
-    istio-injection: enabled
+    istio-injection: disabled
