@@ -172,41 +172,74 @@ values:
         source-repoURL: https://fluent.github.io/helm-charts
         source-chart: fluent-bit
 
-  - fluent-kafka:
+  - dummy-nginx:
       common:
         syncPolicy-automated-prune: true
         syncPolicy-automated-selfHeal: true
-        path: overlays/fluent-kafka
+        path: overlays/dummy-nginx
 
       namespace:
         type: kustomization
         metadata-annotations-sync-wave: 1
-        source-path: overlays/fluent-kafka/namespace
+        source-path: overlays/dummy-nginx/namespace
 
       dummy:
         type: kustomization
+        metadata-annotations-sync-wave: 2
+        destination-namespace: dummy-nginx
+        source-path: overlays/dummy-nginx/dummy
+
+  - veri-fluentd:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/veri-fluentd
+
+      namespace:
+        type: kustomization
         metadata-annotations-sync-wave: 1
-        destination-namespace: fluent-kafka
-        source-path: overlays/fluent-kafka/dummy
+        source-path: overlays/veri-fluentd/namespace
 
       fluentd:
         type: helm
         metadata-annotations-sync-wave: 2
-        destination-namespace: fluent-kafka
+        destination-namespace: veri-fluentd
         source-repoURL: https://fluent.github.io/helm-charts
         source-chart: fluentd
 
+  - veri-fluentbit:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/veri-fluentbit
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/veri-fluentbit/namespace
+
       fluentbit:
         type: helm
-        metadata-annotations-sync-wave: 3
-        destination-namespace: fluent-kafka
+        metadata-annotations-sync-wave: 2
+        destination-namespace: veri-fluentbit
         source-repoURL: https://fluent.github.io/helm-charts
         source-chart: fluent-bit
 
+  - kafka-discard:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/kafka-discard
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/kafka-discard/namespace
+
       discard:
         type: helm
-        metadata-annotations-sync-wave: 3
-        destination-namespace: fluent-kafka
+        metadata-annotations-sync-wave: 2
+        destination-namespace: kafka-discard
         source-repoURL: https://fluent.github.io/helm-charts
         source-chart: fluentd
 

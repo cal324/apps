@@ -39,7 +39,7 @@ data:
 
 
     export default function () {
-      const result = http.get('http://dummy-app.fluent-kafka.svc');
+      const result = http.get('http://dummy-nginx.dummy-nginx.svc');
       check(result, {
         'http response status code is 200': result.status === 200,
       });

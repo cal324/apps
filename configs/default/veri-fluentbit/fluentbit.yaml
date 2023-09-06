@@ -56,7 +56,7 @@ config:
     [OUTPUT]
         Name forward
         Match *
-        Host fluent-kafka-fluentd.fluent-kafka.svc
+        Host veri-fluentd-fluentd.veri-fluentd.svc
         Port 24224
 
   customParsers: |

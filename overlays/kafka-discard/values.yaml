@@ -1,0 +1,10 @@
+project: default
+destination:
+  name: in-cluster
+source:
+  targetRevision: develop
+  repoURL: https://github.com/cal324/apps.git
+values:
+  targetRevision: develop
+  repoURL: https://github.com/cal324/apps.git
+  path: configs/development

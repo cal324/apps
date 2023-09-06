@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fluent-kafka-fluentd
+  name: veri-fluentbit-fluentbit
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: '2'
@@ -11,15 +11,15 @@ metadata:
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: fluent-kafka
+    namespace: veri-fluentbit
   project: "{{ .Values.project }}"
   sources:
   - repoURL: https://fluent.github.io/helm-charts
-    chart: fluentd
-    targetRevision: 0.4.4
+    chart: fluent-bit
+    targetRevision: 0.37.1
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/fluent-kafka/fluentd.yaml"
+      - "$values/{{ .Values.values.path }}/veri-fluentbit/fluentbit.yaml"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values

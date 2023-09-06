@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummy-app
+spec:
+  selector:
+    matchLabels:
+      run: dummy-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: dummy-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /var/log/nginx
+          name: logvol
+          subPathExpr: $(POD_NAME)
+        - mountPath: /etc/nginx/conf.d
+          name: conf
+      volumes:
+      - name: logvol
+        hostPath:
+          path: /var/log/nginx
+          type: DirectoryOrCreate
+      - name: conf
+        configMap:
+          name: nginx-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dummy-app
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: dummy-app
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |-
+    log_format my_custom_format '$remote_addr - $remote_user [$time_local] "$request" '
+                                '$status $body_bytes_sent "$http_referer" '
+                                '"$http_user_agent" "$http_x_forwarded_for" '
+                                '"$http_x_b3_traceid" "$http_x_b3_spanid" "$http_x_b3_parentspanid" "$http_x_b3_sampled"';
+    server {
+      listen     80;
+      server_tokens on;
+      location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+        access_log /var/log/nginx/access.log my_custom_format;
+        error_log /dev/stderr warn;
+      }
+    }
+
