@@ -16,6 +16,10 @@ task :delete do
   $command = 'delete'
 end
 
+task 'argoworkflow' do
+  `kustomize build https://github.com/cal324/apps/base/argoworkflow/?ref=HEAD | kubectl apply -f -`
+end
+
 task 'argocd' do
   `kustomize build https://github.com/cal324/apps/base/argocd/?ref=HEAD | kubectl apply -n argocd -f -`
   puts `kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-server --for condition=Ready --timeout=300s`

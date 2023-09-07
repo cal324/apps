@@ -18,3 +18,12 @@ spec:
             host: argocd-server.argocd.svc.cluster.local
             port:
               number: 443
+    - match:
+        - port: 443
+          sniHosts:
+            - az-argoworkflow
+      route:
+        - destination:
+            host: argo-server.argo.svc.cluster.local
+            port:
+              number: 2746
