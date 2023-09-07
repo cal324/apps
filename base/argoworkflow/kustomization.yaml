@@ -4,7 +4,8 @@ kind: Kustomization
 resources:
   - https://github.com/argoproj/argo-workflows/releases/download/v3.4.10/install.yaml
   - namespace.yaml
-
+  - template.yaml
+  - role.yaml
 patches:
   - target:
       kind: Deployment

@@ -1,0 +1,142 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: k6
+spec:
+  serviceAccountName: argo
+  templates:
+    - name: config-k6
+      inputs:
+        parameters:
+        - name: rate
+        - name: duration
+      resource:
+        action: apply
+        manifest: |
+          apiVersion: v1
+          data:
+            test.js: |
+              import http from 'k6/http';
+              import { check } from 'k6';
+          
+              export const options = {
+                scenarios: {
+                  per_vu_scenario: {
+                    executor: "constant-arrival-rate",
+                    duration: '{{inputs.parameters.duration}}s',
+                    rate: {{inputs.parameters.rate}},
+                    timeUnit: '1s',
+                    preAllocatedVUs: 100,
+                  },
+                },
+              };
+          
+              export default function () {
+                const result = http.get('http://dummy-nginx.dummy-nginx.svc');
+                check(result, {
+                  'http response status code is 200': result.status === 200,
+                });
+              }
+          kind: ConfigMap
+          metadata:
+            name: sample-stress-test
+            namespace: default
+
+    - name: delete-k6
+      resource:
+        action: delete
+        manifest: |
+          apiVersion: k6.io/v1alpha1
+          kind: K6
+          metadata:
+            name: sample-stress-test
+            namespace: default
+
+    - name: apply-k6
+      resource:
+        action: apply
+        manifest: |
+          apiVersion: k6.io/v1alpha1
+          kind: K6
+          metadata:
+            name: k6-sample
+            namespace: default
+          spec:
+            parallelism: 4
+            arguments: --out experimental-prometheus-rw
+            runner:
+              metadata:
+                annotations:
+                  sidecar.istio.io/inject: "false"
+              env:
+                - name: K6_PROMETHEUS_RW_SERVER_URL
+                  value: http://monitoring-prometheus-kube-prometheus.monitoring.svc.cluster.local:9090/api/v1/write
+                - name: K6_PROMETHEUS_RW_PUSH_INTERVAL
+                  value: 5s
+            script:
+              configMap:
+                name: sample-stress-test
+                file: test.js
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: app
+spec:
+  serviceAccountName: argo
+  templates:
+    - name: delete-app
+      inputs:
+        parameters:
+        - name: app
+      resource:
+        action: delete
+        manifest: |
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: {{inputs.parameters.app}}
+            namespace: argocd
+
+    - name: apply-app
+      inputs:
+        parameters:
+        - name: app
+        - name: targetrevision
+        - name: values_targetrevision
+        - name: values_repourl
+        - name: values_path
+      resource:
+        action: apply
+        manifest: |
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: {{inputs.parameters.app}}
+            namespace: argocd
+            finalizers:
+            - resources-finalizer.argocd.argoproj.io
+          spec:
+            destination:
+              name: in-cluster
+            project: default
+            source:
+              repoURL: https://github.com/cal324/apps.git
+              path: overlays/{{inputs.parameters.app}}
+              targetRevision: {{inputs.parameters.targetrevision}}
+              helm:
+                parameters:
+                - name: source.targetRevision
+                  value: {{inputs.parameters.targetrevision}}
+                - name: values.targetRevision
+                  value: {{inputs.parameters.values_targetrevision}}
+                - name: values.repoURL
+                  value: {{inputs.parameters.values_repourl}}
+                - name: values.path
+                  value: {{inputs.parameters.values_path}}
+            syncPolicy:
+              syncOptions: 
+              automated:
+                prune: true
+                selfHeal: true 
+
