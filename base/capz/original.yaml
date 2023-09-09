@@ -125,7 +125,7 @@ spec:
       kind: AzureMachineTemplate
       name: d1-control-plane
   replicas: 3
-  version: v1.26.1
+  version: v1.27.3
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: AzureMachineTemplate
@@ -167,7 +167,7 @@ spec:
         apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
         kind: AzureMachineTemplate
         name: d1-md-0
-      version: v1.26.1
+      version: v1.27.3
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: AzureMachineTemplate
