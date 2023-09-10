@@ -33,6 +33,8 @@ spec:
     - name: control-plane-subnet
       role: control-plane
     - name: node-subnet
+      natGateway:
+        name: node-natgateway
       role: node
     vnet:
       name: d1-vnet
@@ -49,13 +51,25 @@ spec:
     clusterConfiguration:
       apiServer:
         extraArgs:
-          cloud-provider: external
+          cloud-config: /etc/kubernetes/azure.json
+          cloud-provider: azure
+        extraVolumes:
+        - hostPath: /etc/kubernetes/azure.json
+          mountPath: /etc/kubernetes/azure.json
+          name: cloud-config
+          readOnly: true
         timeoutForControlPlane: 20m
       controllerManager:
         extraArgs:
           allocate-node-cidrs: "false"
-          cloud-provider: external
+          cloud-config: /etc/kubernetes/azure.json
+          cloud-provider: azure
           cluster-name: d1
+        extraVolumes:
+        - hostPath: /etc/kubernetes/azure.json
+          mountPath: /etc/kubernetes/azure.json
+          name: cloud-config
+          readOnly: true
       etcd:
         local:
           dataDir: /var/lib/etcddisk/etcd
@@ -90,13 +104,15 @@ spec:
       nodeRegistration:
         kubeletExtraArgs:
           azure-container-registry-config: /etc/kubernetes/azure.json
-          cloud-provider: external
+          cloud-config: /etc/kubernetes/azure.json
+          cloud-provider: azure
         name: '{{ ds.meta_data["local_hostname"] }}'
     joinConfiguration:
       nodeRegistration:
         kubeletExtraArgs:
           azure-container-registry-config: /etc/kubernetes/azure.json
-          cloud-provider: external
+          cloud-config: /etc/kubernetes/azure.json
+          cloud-provider: azure
         name: '{{ ds.meta_data["local_hostname"] }}'
     mounts:
     - - LABEL=etcd_disk
@@ -108,8 +124,8 @@ spec:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
       kind: AzureMachineTemplate
       name: d1-control-plane
-  replicas: 1
-  version: v1.27.1
+  replicas: 3
+  version: v1.27.3
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: AzureMachineTemplate
@@ -151,7 +167,7 @@ spec:
         apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
         kind: AzureMachineTemplate
         name: d1-md-0
-      version: v1.27.1
+      version: v1.27.3
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: AzureMachineTemplate
@@ -187,7 +203,8 @@ spec:
         nodeRegistration:
           kubeletExtraArgs:
             azure-container-registry-config: /etc/kubernetes/azure.json
-            cloud-provider: external
+            cloud-config: /etc/kubernetes/azure.json
+            cloud-provider: azure
           name: '{{ ds.meta_data["local_hostname"] }}'
       preKubeadmCommands: []
 ---
