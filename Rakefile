@@ -18,6 +18,8 @@ end
 
 task 'argoworkflow' do
   `kustomize build https://github.com/cal324/apps/base/argoworkflow/?ref=HEAD | kubectl apply -f -`
+  sleep 5
+  `kubectl apply -f spec/template.yaml `
 end
 
 task 'argocd' do
