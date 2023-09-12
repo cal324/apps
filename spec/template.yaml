@@ -32,7 +32,7 @@ spec:
               };
           
               export default function () {
-                const result = http.get('http://dummy-nginx.dummy-nginx.svc');
+                const result = http.get('http://dummy-nginx.veri.svc');
                 check(result, {
                   'http response status code is 200': result.status === 200,
                 });
@@ -49,7 +49,7 @@ spec:
           apiVersion: k6.io/v1alpha1
           kind: K6
           metadata:
-            name: sample-stress-test
+            name: k6-sample
             namespace: default
 
     - name: apply-k6
@@ -139,4 +139,30 @@ spec:
               automated:
                 prune: true
                 selfHeal: true 
-
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: wait
+spec:
+  serviceAccountName: default
+  templates:
+    - name: sleep
+      inputs:
+        parameters:
+        - name: time
+      container:
+        image: ubuntu
+        command: ["/bin/bash", "-c"]
+        args:
+          - sleep "{{inputs.parameters.time}}";
+    - name: wait-fluentd
+      container:
+        image: bitnami/kubectl:latest
+        command: [sh, -c]
+        args: ["kubectl wait --for=jsonpath='{.status.readyReplicas}'=1 StatefulSet/veri-fluentd-fluentd -n veri --timeout=300s"]
+    - name: wait-fluentbit
+      container:
+        image: bitnami/kubectl:latest
+        command: [sh, -c]
+        args: ["kubectl wait --for=jsonpath='{.status.numberReady}'=1 daemonset/veri-fluentbit-fluentbit-fluent-bit -n veri --timeout=300s"]

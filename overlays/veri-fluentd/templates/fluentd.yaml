@@ -5,13 +5,13 @@ metadata:
   name: veri-fluentd-fluentd
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: '2'
+    argocd.argoproj.io/sync-wave: '1'
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: veri-fluentd
+    namespace: veri
   project: "{{ .Values.project }}"
   sources:
   - repoURL: https://fluent.github.io/helm-charts

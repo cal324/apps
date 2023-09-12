@@ -1,6 +1,6 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: dummy-nginx
+  name: veri
   labels:
     istio-injection: enabled

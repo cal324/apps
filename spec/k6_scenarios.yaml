@@ -39,7 +39,7 @@ data:
 
 
     export default function () {
-      const result = http.get('http://dummy-nginx.dummy-nginx.svc');
+      const result = http.get('http://dummy-nginx.veri.svc');
       check(result, {
         'http response status code is 200': result.status === 200,
       });

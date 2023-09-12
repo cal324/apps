@@ -56,7 +56,7 @@ config:
     [OUTPUT]
         Name forward
         Match *
-        Host veri-fluentd-fluentd.veri-fluentd.svc
+        Host veri-fluentd-fluentd.veri.svc
         Port 24224
 
   customParsers: |

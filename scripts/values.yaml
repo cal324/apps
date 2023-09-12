@@ -186,7 +186,7 @@ values:
       dummy:
         type: kustomization
         metadata-annotations-sync-wave: 2
-        destination-namespace: dummy-nginx
+        destination-namespace: veri
         source-path: overlays/dummy-nginx/dummy
 
   - veri-fluentd:
@@ -195,15 +195,10 @@ values:
         syncPolicy-automated-selfHeal: true
         path: overlays/veri-fluentd
 
-      namespace:
-        type: kustomization
-        metadata-annotations-sync-wave: 1
-        source-path: overlays/veri-fluentd/namespace
-
       fluentd:
         type: helm
-        metadata-annotations-sync-wave: 2
-        destination-namespace: veri-fluentd
+        metadata-annotations-sync-wave: 1
+        destination-namespace: veri
         source-repoURL: https://fluent.github.io/helm-charts
         source-chart: fluentd
 
@@ -213,15 +208,10 @@ values:
         syncPolicy-automated-selfHeal: true
         path: overlays/veri-fluentbit
 
-      namespace:
-        type: kustomization
-        metadata-annotations-sync-wave: 1
-        source-path: overlays/veri-fluentbit/namespace
-
       fluentbit:
         type: helm
-        metadata-annotations-sync-wave: 2
-        destination-namespace: veri-fluentbit
+        metadata-annotations-sync-wave: 1
+        destination-namespace: veri
         source-repoURL: https://fluent.github.io/helm-charts
         source-chart: fluent-bit
 

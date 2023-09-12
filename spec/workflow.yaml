@@ -4,80 +4,71 @@ metadata:
   generateName: aggregator-sample-
 spec:
   serviceAccountName: default
-  entrypoint: whalesay
+  entrypoint: sample
   arguments:
     parameters:
-      - name: global-parameter
-        value: hello222
+    - {name: targetrevision, value: develop}
+    - {name: values_targetrevision, value: HEAD}
+    - {name: values_repourl, value: https://github.com/cal324/spec.git}
+    - {name: values_path, value: test} 
   templates:
-    - name: whalesay
-      steps:
-        - - name: apply-fluentd
-            arguments:
-              parameters:
-              - name: app
-                value: veri-fluentd
-              - name: targetrevision
-                value: develop
-              - name: values_targetrevision
-                value: HEAD
-              - name: values_repourl
-                value: https://github.com/cal324/spec.git
-              - name: values_path
-                value: test
-            templateRef:
-              name: app
-              template: apply-app
-        - - name: apply-fluentbit
-            arguments:
-              parameters:
-              - name: app
-                value: veri-fluentbit
-              - name: targetrevision
-                value: develop
-              - name: values_targetrevision
-                value: HEAD
-              - name: values_repourl
-                value: https://github.com/cal324/spec.git
-              - name: values_path
-                value: test
-            templateRef:
-              name: app
-              template: apply-app
-        - - name: config-k6
-            arguments:
-              parameters:
-              - name: rate
-                value: 100
-              - name: duration
-                value: 180
-            templateRef:
-              name: k6
-              template: config-k6
-        - - name: apply-k6
-            templateRef:
-              name: k6
-              template: apply-k6
-        - - name: delete-k6
-            templateRef:
-              name: k6
-              template: delete-k6
-        - - name: delete-fluentbit
-            arguments:
-              parameters:
-              - name: app
-                value: veri-fluentbit
-            templateRef:
-              name: app
-              template: delete-app
-        - - name: delete-fluentd
-            arguments:
-              parameters:
-              - name: app
-                value: veri-fluentd
-            templateRef:
-              name: app
-              template: delete-app
+    - name: sample
+      dag:
+        tasks:
 
+        - name: apply-fluentd
+          arguments:
+            parameters:
+            - {name: app, value: veri-fluentd}
+            - {name: targetrevision, value: "{{workflow.parameters.targetrevision}}"}
+            - {name: values_targetrevision, value: "{{workflow.parameters.values_targetrevision}}"}
+            - {name: values_repourl, value: "{{workflow.parameters.values_repourl}}"}
+            - {name: values_path, value: "{{workflow.parameters.values_path}}"}
+          templateRef: {name: app, template: apply-app}
 
+        - name: wait-fluentd
+          dependencies: [apply-fluentd]
+          templateRef: {name: wait, template: wait-fluentd}
+
+        - name: apply-fluentbit
+          arguments:
+            parameters:
+            - {name: app, value: veri-fluentbit}
+            - {name: targetrevision, value: "{{workflow.parameters.targetrevision}}"}
+            - {name: values_targetrevision, value: "{{workflow.parameters.values_targetrevision}}"}
+            - {name: values_repourl, value: "{{workflow.parameters.values_repourl}}"}
+            - {name: values_path, value: "{{workflow.parameters.values_path}}"}
+          dependencies: [wait-fluentd]
+          templateRef: {name: app, template: apply-app}
+
+        - name: wait-fluentbit
+          dependencies: [apply-fluentbit]
+          templateRef: {name: wait, template: wait-fluentbit}
+
+        - name: config-k6
+          arguments: {parameters: [{name: rate, value: 100}, {name: duration, value: 180}]}
+          templateRef: {name: k6, template: config-k6}
+
+        - name: apply-k6
+          dependencies: [wait-fluentbit]
+          templateRef: {name: k6, template: apply-k6}
+
+        - name: sleep-k6
+          dependencies: [apply-k6]
+          arguments: {parameters: [{name: time, value: 200}]}
+          templateRef: {name: wait, template: sleep}
+
+        - name: delete-k6
+          dependencies: [sleep-k6]
+          templateRef: {name: k6, template: delete-k6}
+
+        - name: delete-fluentbit
+          dependencies: [sleep-k6]
+          arguments: {parameters: [{name: app, value: veri-fluentbit}]}
+          templateRef: {name: app, template: delete-app}
+
+        - name: delete-fluentd
+          dependencies: [delete-fluentbit]
+          arguments: {parameters: [{name: app, value: veri-fluentd}]}
+          templateRef: {name: app, template: delete-app}
 
