@@ -17,13 +17,13 @@ task :delete do
 end
 
 task 'argoworkflow' do
-  puts `kustomize build https://github.com/cal324/apps/base/argoworkflow/?ref=HEAD | kubectl apply -f -`
+  `kustomize build base/argoworkflow/ | kubectl apply -f -`
   sleep 5
-  puts `kubectl apply -f spec/template.yaml `
+  `kubectl apply -f spec/template.yaml `
 end
 
 task 'argocd' do
-  `kustomize build https://github.com/cal324/apps/base/argocd/?ref=HEAD | kubectl apply -n argocd -f -`
+  `kustomize build base/argocd/ | kubectl apply -n argocd -f -`
   puts `kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-server --for condition=Ready --timeout=300s`
   puts `kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-dex-server --for condition=Ready --timeout=300s`
   puts `kubectl wait po -n argocd -l app.kubernetes.io/name=argocd-repo-server --for condition=Ready --timeout=300s`
@@ -36,7 +36,7 @@ task 'kind' do
 end
 
 task 'k6' do
-  puts `kustomize build https://github.com/cal324/apps/base/k6/?ref=HEAD | kubectl apply -f -`
+  `kustomize build base/k6/ | kubectl apply -f -`
 end
 
 task 'cluster_api' do
