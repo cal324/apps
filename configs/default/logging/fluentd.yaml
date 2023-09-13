@@ -110,11 +110,13 @@ fileConfigs:
           container_name $.kubernetes.container_name
           loglevel $.loglevel
         </label>
-        flush_interval 5s
+        flush_interval 1s
         <buffer>
           @type file
           path /var/log/fluent/loki
           flush_at_shutdown true
+          buffer_chunk_limit 5m
+          queued_chunk_flush_interval 0.1s
         </buffer>
       </store>
       <store>

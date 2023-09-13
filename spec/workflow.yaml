@@ -10,7 +10,7 @@ spec:
     - {name: targetrevision, value: develop}
     - {name: values_targetrevision, value: HEAD}
     - {name: values_repourl, value: https://github.com/cal324/spec.git}
-    - {name: rate, value: 100}
+    - {name: rate, value: 500}
     - {name: duration, value: 180}
   templates:
     - name: sample

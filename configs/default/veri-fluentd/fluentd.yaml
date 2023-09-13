@@ -8,10 +8,7 @@ service:
      containerPort: 24224
 metrics:
   serviceMonitor:
-    enabled: true
-    additionalLabels:
-      release: monitoring-prometheus
-    namespace: "monitoring"
+    enabled: false
   prometheusRule:
     enabled: true
     additionalLabels: 

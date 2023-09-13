@@ -3,3 +3,5 @@ kind: Kustomization
 
 resources:
 - dummyapp.yaml
+- service_monitor_fluentbit.yaml
+- service_monitor_fluentd.yaml
