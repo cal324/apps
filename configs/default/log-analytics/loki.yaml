@@ -18,3 +18,5 @@ singleBinary:
   replicas: 1
   autoscaling:
     enabled: true
+  persistence:
+     size: 50Gi

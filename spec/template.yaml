@@ -161,11 +161,16 @@ spec:
         image: bitnami/kubectl:latest
         command: [sh, -c]
         args: ["kubectl wait --for=jsonpath='{.status.readyReplicas}'=1 StatefulSet/veri-fluentd-fluentd -n veri --timeout=300s"]
+    - name: wait-fluentd-ds
+      container:
+        image: bitnami/kubectl:latest
+        command: [sh, -c]
+        args: ["kubectl wait --for=jsonpath='{.status.numberMisscheduled}'=0 daemonset/veri-fluentd-fluentd -n veri --timeout=300s"]
     - name: wait-fluentbit
       container:
         image: bitnami/kubectl:latest
         command: [sh, -c]
-        args: ["kubectl wait --for=jsonpath='{.status.numberReady}'=1 daemonset/veri-fluentbit-fluentbit-fluent-bit -n veri --timeout=300s"]
+        args: ["kubectl wait --for=jsonpath='{.status.numberMisscheduled}'=0 daemonset/veri-fluentbit-fluentbit-fluent-bit -n veri --timeout=300s"]
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
@@ -247,4 +252,125 @@ spec:
           dependencies: [delete-fluentbit]
           arguments: {parameters: [{name: app, value: veri-fluentd}]}
           templateRef: {name: app, template: delete-app}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: fluentbit-only
+spec:
+  serviceAccountName: default
+  entrypoint: deploy
+  arguments:
+    parameters:
+    - {name: targetrevision, value: develop}
+    - {name: values_targetrevision, value: HEAD}
+    - {name: values_repourl, value: https://github.com/cal324/spec.git}
+    - {name: values_path, value: test}
+    - {name: rate, value: 100}
+    - {name: duration, value: 180}
+  templates:
+    - name: deploy
+      dag:
+        tasks:
 
+        - name: apply-fluentbit
+          arguments:
+            parameters:
+            - {name: app, value: veri-fluentbit}
+            - {name: targetrevision, value: "{{workflow.parameters.targetrevision}}"}
+            - {name: values_targetrevision, value: "{{workflow.parameters.values_targetrevision}}"}
+            - {name: values_repourl, value: "{{workflow.parameters.values_repourl}}"}
+            - {name: values_path, value: "{{workflow.parameters.values_path}}"}
+          templateRef: {name: app, template: apply-app}
+
+        - name: wait-fluentbit
+          dependencies: [apply-fluentbit]
+          templateRef: {name: wait, template: wait-fluentbit}
+
+        - name: config-k6
+          arguments: {parameters: [{name: rate, value: "{{workflow.parameters.rate}}"}, {name: duration, value: "{{workflow.parameters.duration}}"}]}
+          templateRef: {name: k6, template: config-k6}
+
+        - name: apply-k6
+          dependencies: [wait-fluentbit]
+          templateRef: {name: k6, template: apply-k6}
+
+        - name: sleep-k6
+          dependencies: [apply-k6]
+          arguments: {parameters: [{name: time, value: "{{workflow.parameters.duration}}"}]}
+          templateRef: {name: wait, template: sleep}
+
+        - name: sleep-k6-buffer
+          dependencies: [sleep-k6]
+          arguments: {parameters: [{name: time, value: 30}]}
+          templateRef: {name: wait, template: sleep}
+
+        - name: delete-k6
+          dependencies: [sleep-k6-buffer]
+          templateRef: {name: k6, template: delete-k6}
+
+        - name: delete-fluentbit
+          dependencies: [sleep-k6-buffer]
+          arguments: {parameters: [{name: app, value: veri-fluentbit}]}
+          templateRef: {name: app, template: delete-app}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: fluentd-only
+spec:
+  serviceAccountName: default
+  entrypoint: deploy
+  arguments:
+    parameters:
+    - {name: targetrevision, value: develop}
+    - {name: values_targetrevision, value: HEAD}
+    - {name: values_repourl, value: https://github.com/cal324/spec.git}
+    - {name: values_path, value: test}
+    - {name: rate, value: 100}
+    - {name: duration, value: 180}
+  templates:
+    - name: deploy
+      dag:
+        tasks:
+
+        - name: apply-fluentd
+          arguments:
+            parameters:
+            - {name: app, value: veri-fluentd}
+            - {name: targetrevision, value: "{{workflow.parameters.targetrevision}}"}
+            - {name: values_targetrevision, value: "{{workflow.parameters.values_targetrevision}}"}
+            - {name: values_repourl, value: "{{workflow.parameters.values_repourl}}"}
+            - {name: values_path, value: "{{workflow.parameters.values_path}}"}
+          templateRef: {name: app, template: apply-app}
+
+        - name: wait-fluentd
+          dependencies: [apply-fluentd]
+          templateRef: {name: wait, template: wait-fluentd-ds}
+
+        - name: config-k6
+          arguments: {parameters: [{name: rate, value: "{{workflow.parameters.rate}}"}, {name: duration, value: "{{workflow.parameters.duration}}"}]}
+          templateRef: {name: k6, template: config-k6}
+
+        - name: apply-k6
+          dependencies: [wait-fluentd]
+          templateRef: {name: k6, template: apply-k6}
+
+        - name: sleep-k6
+          dependencies: [apply-k6]
+          arguments: {parameters: [{name: time, value: "{{workflow.parameters.duration}}"}]}
+          templateRef: {name: wait, template: sleep}
+
+        - name: sleep-k6-buffer
+          dependencies: [sleep-k6]
+          arguments: {parameters: [{name: time, value: 30}]}
+          templateRef: {name: wait, template: sleep}
+
+        - name: delete-k6
+          dependencies: [sleep-k6-buffer]
+          templateRef: {name: k6, template: delete-k6}
+
+        - name: delete-fluentd
+          dependencies: [sleep-k6-buffer]
+          arguments: {parameters: [{name: app, value: veri-fluentd}]}
+          templateRef: {name: app, template: delete-app}

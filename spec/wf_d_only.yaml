@@ -10,12 +10,12 @@ spec:
     - {name: targetrevision, value: develop}
     - {name: values_targetrevision, value: HEAD}
     - {name: values_repourl, value: https://github.com/cal324/spec.git}
-    - {name: rate, value: 100}
+    - {name: rate, value: 1000}
     - {name: duration, value: 180}
   templates:
     - name: sample
       steps:
-        - - name: aggregator
+        - - name: fluentd-only
             template: test1
 
     - name: test1
@@ -32,10 +32,10 @@ spec:
               - {name: targetrevision, value: "{{workflow.parameters.targetrevision}}"}
               - {name: values_targetrevision, value: "{{workflow.parameters.values_targetrevision}}"}
               - {name: values_repourl, value: "{{workflow.parameters.values_repourl}}"}
-              - {name: values_path, value: paththrough-aggregator }
+              - {name: values_path, value: paththrough-fluentd-only }
               - {name: rate, value: "{{workflow.parameters.rate}}"}
               - {name: duration, value: "{{workflow.parameters.duration}}"}
             workflowTemplateRef:
-              name: aggregator
+              name: fluentd-only
         successCondition: status.phase == Succeeded
         failureCondition: status.phase in (Failed, Error)

@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/instance: veri-fluentd-fluentd
+    app.kubernetes.io/name: fluentd
+    release: monitoring-prometheus
+  name: veri-fluentd-fluentd
+  namespace: monitoring
+spec:
+  endpoints:
+  - interval: 5s
+    path: /metrics
+    port: metrics
+    scrapeTimeout: 5s
+  jobLabel: veri-fluentd-fluentd
+  namespaceSelector:
+    matchNames:
+    - veri
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: veri-fluentd-fluentd
+      app.kubernetes.io/name: fluentd
