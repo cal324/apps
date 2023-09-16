@@ -12,10 +12,12 @@ spec:
     - {name: values_repourl, value: https://github.com/cal324/spec.git}
     - {name: rate, value: 1000}
     - {name: duration, value: 180}
+    - {name: limit_cpu, value: 100m}
+    - {name: limit_memory, value: 128Mi}
   templates:
     - name: sample
       steps:
-        - - name: fluentd-only
+        - - name: aggregator
             template: test1
 
     - name: test1
@@ -32,10 +34,12 @@ spec:
               - {name: targetrevision, value: "{{workflow.parameters.targetrevision}}"}
               - {name: values_targetrevision, value: "{{workflow.parameters.values_targetrevision}}"}
               - {name: values_repourl, value: "{{workflow.parameters.values_repourl}}"}
-              - {name: values_path, value: paththrough-fluentd-only }
+              - {name: values_path, value: paththrough-aggregator }
               - {name: rate, value: "{{workflow.parameters.rate}}"}
               - {name: duration, value: "{{workflow.parameters.duration}}"}
+              - {name: limit_cpu, value: "{{workflow.parameters.limit_cpu}}"}
+              - {name: limit_memory, value: "{{workflow.parameters.limit_memory}}"}
             workflowTemplateRef:
-              name: fluentd-only
+              name: aggregator
         successCondition: status.phase == Succeeded
         failureCondition: status.phase in (Failed, Error)

@@ -8,3 +8,7 @@ values:
   targetRevision: develop
   repoURL: https://github.com/cal324/apps.git
   path: configs/development
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi

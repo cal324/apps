@@ -16,12 +16,12 @@ configs:
   tasks: [kind, argocd, istio, "@tracing", "@monitoring", "@log-analytics", wave1, "@logging", "@kafka", wave2, "@dummy-nginx", "@kafka-discard", wave3, argoworkflow, k6]
 - name: performance
   deployment: performance
-  targetrevision: main
+  targetrevision: develop
   repourl: https://github.com/cal324/apps.git
-  values_targetrevision: main
+  values_targetrevision: develop
   values_repourl: https://github.com/cal324/apps.git
   values_path: configs/performance
-  tasks: [cluster_api, capz, argocd, "@istio", "@rook", wave1, "@tracing", "@monitoring", "@log-analytics", wave2, "@logging", "@kafka", wave3, "@dummy-nginx", "@kafka-discard", wave4, argoworkflow, k6]
+  tasks: [cluster_api, capz, argocd, istio, "@tracing", "@monitoring", "@log-analytics", wave1, "@logging", "@kafka", wave2, "@dummy-nginx", "@kafka-discard", wave3, argoworkflow, k6]
 - name: production
   deployment: production
   targetrevision: main

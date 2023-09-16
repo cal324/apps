@@ -22,6 +22,13 @@ spec:
     helm:
       valueFiles:
         - $values/<%= '{{' %> <%= global['values-path'] %> <%= '}}' %>/<%= group %>/<%= app_name %>.yaml
+<% if param['setResource'] %>
+      parameters:
+        - name: resources.limits.cpu
+          value: "{{.Values.resources.limits.cpu}}"
+        - name: resources.limits.memory
+          value: "{{.Values.resources.limits.memory}}"
+<% end %>
   - repoURL: "<%= '{{' %> <%= global['values-repoURL'] %> <%= '}}' %>"
     targetRevision: "<%= '{{' %> <%= global['values-values-targetRevision'] %> <%= '}}' %>"
     ref: values

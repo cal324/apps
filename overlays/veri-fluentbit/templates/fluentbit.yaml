@@ -20,6 +20,11 @@ spec:
     helm:
       valueFiles:
       - "$values/{{ .Values.values.path }}/veri-fluentbit/fluentbit.yaml"
+      parameters:
+      - name: resources.limits.cpu
+        value: "{{.Values.resources.limits.cpu}}"
+      - name: resources.limits.memory
+        value: "{{.Values.resources.limits.memory}}"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values

@@ -44,8 +44,8 @@ dashboards:
 # Resource Configuration
 resources:
   limits:
-    cpu: 200m
-    memory: 256Mi
+    cpu: 1000m
+    memory: 512Mi
 
 # Using Kubelet to Get Metadata
 podAnnotations:
@@ -68,9 +68,10 @@ fileConfigs:
       }
       tag kafka
       <parse>
-        @type avro
-        schema_json {"type":"record","name":"sampleRecord","namespace":"com.mycorp.mynamespace","fields":[{"name": "remote", "type": "string"},{"name": "host", "type": "string"},{"name": "user", "type": "string"},{"name": "method", "type":"string"},{"name": "path", "type": "string"},{"name": "code", "type": "string"},{"name": "size", "type": "string"},{"name": "referer", "type": "string"},{"name": "agent", "type": "string"},{"name":"http_x_forwarded_for", "type": "string"},{"name": "x_b3_traceid", "type": "string"},{"name": "x_b3_spanid", "type": "string"},{"name":"x_b3_parentspanid", "type": "string"},{"name": "x_b3_sampled", "type": "string"}]}
-        use_confluent_schema false
+        @json
+#        @type avro
+#        schema_json {"type":"record","name":"sampleRecord","namespace":"com.mycorp.mynamespace","fields":[{"name": "remote", "type": "string"},{"name": "host", "type": "string"},{"name": "user", "type": "string"},{"name": "method", "type":"string"},{"name": "path", "type": "string"},{"name": "code", "type": "string"},{"name": "size", "type": "string"},{"name": "referer", "type": "string"},{"name": "agent", "type": "string"},{"name":"http_x_forwarded_for", "type": "string"},{"name": "x_b3_traceid", "type": "string"},{"name": "x_b3_spanid", "type": "string"},{"name":"x_b3_parentspanid", "type": "string"},{"name": "x_b3_sampled", "type": "string"}]}
+#        use_confluent_schema false
       </parse>
     </source>
 

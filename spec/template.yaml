@@ -106,6 +106,8 @@ spec:
         - name: values_targetrevision
         - name: values_repourl
         - name: values_path
+        - name: limit_cpu
+        - name: limit_memory
       resource:
         action: apply
         manifest: |
@@ -134,6 +136,10 @@ spec:
                   value: {{inputs.parameters.values_repourl}}
                 - name: values.path
                   value: {{inputs.parameters.values_path}}
+                - name: resources.limits.cpu
+                  value: {{inputs.parameters.limit_cpu}}
+                - name: resources.limits.memory
+                  value: {{inputs.parameters.limit_memory}}
             syncPolicy:
               syncOptions: 
               automated:
@@ -187,6 +193,9 @@ spec:
     - {name: values_path, value: test} 
     - {name: rate, value: 100}
     - {name: duration, value: 180}
+    - {name: limit_cpu, value: 100m}
+    - {name: limit_memory, value: 128Mi}
+
   templates:
     - name: deploy
       dag:
@@ -200,6 +209,8 @@ spec:
             - {name: values_targetrevision, value: "{{workflow.parameters.values_targetrevision}}"}
             - {name: values_repourl, value: "{{workflow.parameters.values_repourl}}"}
             - {name: values_path, value: "{{workflow.parameters.values_path}}"}
+            - {name: limit_cpu, value: "{{workflow.parameters.limit_cpu}}"}
+            - {name: limit_memory, value: "{{workflow.parameters.limit_memory}}"}
           templateRef: {name: app, template: apply-app}
 
         - name: wait-fluentd
@@ -214,6 +225,8 @@ spec:
             - {name: values_targetrevision, value: "{{workflow.parameters.values_targetrevision}}"}
             - {name: values_repourl, value: "{{workflow.parameters.values_repourl}}"}
             - {name: values_path, value: "{{workflow.parameters.values_path}}"}
+            - {name: limit_cpu, value: "{{workflow.parameters.limit_cpu}}"}
+            - {name: limit_memory, value: "{{workflow.parameters.limit_memory}}"}
           dependencies: [wait-fluentd]
           templateRef: {name: app, template: apply-app}
 
@@ -268,6 +281,9 @@ spec:
     - {name: values_path, value: test}
     - {name: rate, value: 100}
     - {name: duration, value: 180}
+    - {name: limit_cpu, value: 100m}
+    - {name: limit_memory, value: 128Mi}
+
   templates:
     - name: deploy
       dag:
@@ -281,6 +297,8 @@ spec:
             - {name: values_targetrevision, value: "{{workflow.parameters.values_targetrevision}}"}
             - {name: values_repourl, value: "{{workflow.parameters.values_repourl}}"}
             - {name: values_path, value: "{{workflow.parameters.values_path}}"}
+            - {name: limit_cpu, value: "{{workflow.parameters.limit_cpu}}"}
+            - {name: limit_memory, value: "{{workflow.parameters.limit_memory}}"}
           templateRef: {name: app, template: apply-app}
 
         - name: wait-fluentbit
@@ -329,6 +347,8 @@ spec:
     - {name: values_path, value: test}
     - {name: rate, value: 100}
     - {name: duration, value: 180}
+    - {name: limit_cpu, value: 100m}
+    - {name: limit_memory, value: 128Mi}
   templates:
     - name: deploy
       dag:
@@ -342,6 +362,9 @@ spec:
             - {name: values_targetrevision, value: "{{workflow.parameters.values_targetrevision}}"}
             - {name: values_repourl, value: "{{workflow.parameters.values_repourl}}"}
             - {name: values_path, value: "{{workflow.parameters.values_path}}"}
+            - {name: limit_cpu, value: "{{workflow.parameters.limit_cpu}}"}
+            - {name: limit_memory, value: "{{workflow.parameters.limit_memory}}"}
+
           templateRef: {name: app, template: apply-app}
 
         - name: wait-fluentd

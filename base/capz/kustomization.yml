@@ -128,12 +128,6 @@ patches:
     spec:
       template:
         spec:
-          dataDisks:
-          - diskSizeGB: 256
-            lun: 0
-            nameSuffix: data
-            managedDisk:
-              storageAccountType: Standard_LRS
           osDisk:
             diskSizeGB: 128
             managedDisk:
