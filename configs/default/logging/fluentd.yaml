@@ -45,10 +45,7 @@ dashboards:
 
 # Resource Configuration
 persistence:
-  enabled: true
-  storageClass: ""
-  accessMode: ReadWriteOnce
-  size: 10Gi
+  enabled: false
 
 # Using Kubelet to Get Metadata
 podAnnotations:
@@ -111,13 +108,6 @@ fileConfigs:
           loglevel $.loglevel
         </label>
         flush_interval 1s
-        <buffer>
-          @type file
-          path /var/log/fluent/loki
-          flush_at_shutdown true
-          buffer_chunk_limit 5m
-          queued_chunk_flush_interval 0.1s
-        </buffer>
       </store>
       <store>
         @type prometheus
