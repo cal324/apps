@@ -181,12 +181,54 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
+  name: get-time
+spec:
+  serviceAccountName: default
+  templates:
+    - name: get-time
+      container:
+        image: ubuntu
+        command: ["/bin/bash", "-c"]
+        args:
+          - date +%s%3N;
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: create-annotation
+spec:
+  serviceAccountName: default
+  templates:
+    - name: create-annotation
+      inputs:
+        parameters:
+        - name: wf-name
+        - name: start-time
+        - name: rate
+        - name: duration
+        - name: limit_cpu
+        - name: limit_memory
+      container:
+        image: ubuntu
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            apt-get update && apt-get install -y curl jq;
+            RESP=`curl -v -X POST -H "Content-Type: application/json" -d '{"name":"perf-test-{{inputs.parameters.start-time}}", "role": "Admin"}' http://admin:admin@monitoring-prometheus-grafana.monitoring.svc/api/auth/keys`;
+            APIKEY=`echo $RESP | jq .key -r`
+            ENDTIME=`date +%s%3N`;
+            curl -v -X POST -H "Authorization: Bearer $APIKEY" -H "Content-Type: application/json" monitoring-prometheus-grafana.monitoring.svc/api/annotations -d '{"time": {{inputs.parameters.start-time}}, "timeEnd": '$ENDTIME', "dashboardUID": "cd29b372-f45a-497d-9c36-1632563e9b4d", "tags": ["perf"], "text": "{{inputs.parameters.wf-name}}(rate:{{inputs.parameters.rate}}-duration:{{inputs.parameters.duration}}-cpu:{{inputs.parameters.limit_cpu}}-memory:{{inputs.parameters.limit_memory}})" } ';
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
   name: aggregator
 spec:
   serviceAccountName: default
   entrypoint: deploy
   arguments:
     parameters:
+    - {name: wf-name, value: test}
     - {name: targetrevision, value: develop}
     - {name: values_targetrevision, value: HEAD}
     - {name: values_repourl, value: https://github.com/cal324/spec.git}
@@ -201,7 +243,11 @@ spec:
       dag:
         tasks:
 
+        - name: get-time
+          templateRef: {name: get-time, template: get-time}
+
         - name: apply-fluentd
+          dependencies: [get-time]
           arguments:
             parameters:
             - {name: app, value: veri-fluentd}
@@ -252,6 +298,18 @@ spec:
           arguments: {parameters: [{name: time, value: 30}]}
           templateRef: {name: wait, template: sleep}
 
+        - name: create-annotation
+          dependencies: [sleep-k6-buffer]
+          arguments:
+            parameters:
+            - {name: wf-name, value: "{{workflow.parameters.wf-name}}"}
+            - {name: start-time, value: "{{tasks.get-time.outputs.result}}"}
+            - {name: rate, value: "{{workflow.parameters.rate}}"}
+            - {name: duration, value: "{{workflow.parameters.duration}}"}
+            - {name: limit_cpu, value: "{{workflow.parameters.limit_cpu}}"}
+            - {name: limit_memory, value: "{{workflow.parameters.limit_memory}}"}
+          templateRef: {name: create-annotation, template: create-annotation}
+
         - name: delete-k6
           dependencies: [sleep-k6-buffer]
           templateRef: {name: k6, template: delete-k6}
@@ -275,6 +333,7 @@ spec:
   entrypoint: deploy
   arguments:
     parameters:
+    - {name: wf-name, value: test}
     - {name: targetrevision, value: develop}
     - {name: values_targetrevision, value: HEAD}
     - {name: values_repourl, value: https://github.com/cal324/spec.git}
@@ -289,7 +348,11 @@ spec:
       dag:
         tasks:
 
+        - name: get-time
+          templateRef: {name: get-time, template: get-time}
+
         - name: apply-fluentbit
+          dependencies: [get-time]
           arguments:
             parameters:
             - {name: app, value: veri-fluentbit}
@@ -323,6 +386,18 @@ spec:
           arguments: {parameters: [{name: time, value: 30}]}
           templateRef: {name: wait, template: sleep}
 
+        - name: create-annotation
+          dependencies: [sleep-k6-buffer]
+          arguments:
+            parameters:
+            - {name: wf-name, value: "{{workflow.parameters.wf-name}}"}
+            - {name: start-time, value: "{{tasks.get-time.outputs.result}}"}
+            - {name: rate, value: "{{workflow.parameters.rate}}"}
+            - {name: duration, value: "{{workflow.parameters.duration}}"}
+            - {name: limit_cpu, value: "{{workflow.parameters.limit_cpu}}"}
+            - {name: limit_memory, value: "{{workflow.parameters.limit_memory}}"}
+          templateRef: {name: create-annotation, template: create-annotation}
+
         - name: delete-k6
           dependencies: [sleep-k6-buffer]
           templateRef: {name: k6, template: delete-k6}
@@ -341,6 +416,7 @@ spec:
   entrypoint: deploy
   arguments:
     parameters:
+    - {name: wf-name, value: test}
     - {name: targetrevision, value: develop}
     - {name: values_targetrevision, value: HEAD}
     - {name: values_repourl, value: https://github.com/cal324/spec.git}
@@ -354,7 +430,11 @@ spec:
       dag:
         tasks:
 
+        - name: get-time
+          templateRef: {name: get-time, template: get-time}
+
         - name: apply-fluentd
+          dependencies: [get-time]
           arguments:
             parameters:
             - {name: app, value: veri-fluentd}
@@ -389,6 +469,18 @@ spec:
           arguments: {parameters: [{name: time, value: 30}]}
           templateRef: {name: wait, template: sleep}
 
+        - name: create-annotation
+          dependencies: [sleep-k6-buffer]
+          arguments:
+            parameters:
+            - {name: wf-name, value: "{{workflow.parameters.wf-name}}"}
+            - {name: start-time, value: "{{tasks.get-time.outputs.result}}"}
+            - {name: rate, value: "{{workflow.parameters.rate}}"}
+            - {name: duration, value: "{{workflow.parameters.duration}}"}
+            - {name: limit_cpu, value: "{{workflow.parameters.limit_cpu}}"}
+            - {name: limit_memory, value: "{{workflow.parameters.limit_memory}}"}
+          templateRef: {name: create-annotation, template: create-annotation}
+
         - name: delete-k6
           dependencies: [sleep-k6-buffer]
           templateRef: {name: k6, template: delete-k6}
@@ -397,3 +489,4 @@ spec:
           dependencies: [sleep-k6-buffer]
           arguments: {parameters: [{name: app, value: veri-fluentd}]}
           templateRef: {name: app, template: delete-app}
+

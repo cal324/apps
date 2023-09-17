@@ -127,7 +127,7 @@ spec:
         diskSizeGB: 128
         osType: Linux
       sshPublicKey: ""
-      vmSize: Standard_D2s_v3
+      vmSize: Standard_D2s_v5
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
@@ -165,7 +165,7 @@ spec:
         diskSizeGB: 128
         osType: Linux
       sshPublicKey: ""
-      vmSize: Standard_D4s_v3
+      vmSize: Standard_D5s_v5
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
