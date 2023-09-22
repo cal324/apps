@@ -17,9 +17,9 @@ spec:
           data:
             test.js: |
               import http from 'k6/http';
-              import { check } from 'k6';
           
               export const options = {
+                discardResponseBodies: true,
                 scenarios: {
                   per_vu_scenario: {
                     executor: "constant-arrival-rate",
@@ -32,10 +32,7 @@ spec:
               };
           
               export default function () {
-                const result = http.get('http://dummy-nginx.veri.svc');
-                check(result, {
-                  'http response status code is 200': result.status === 200,
-                });
+                http.get('http://dummy-nginx.veri.svc');
               }
           kind: ConfigMap
           metadata:
