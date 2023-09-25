@@ -298,3 +298,28 @@ values:
         destination-namespace: kafka
         source-path: overlays/kafka/topic
 
+  - confluent:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/confluent
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/confluent/namespace
+
+      operator:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: confluent
+        source-repoURL: https://packages.confluent.io/helm
+        source-chart: confluent-for-kubernetes
+        syncPolicy-syncOptions-ServerSideApply: true
+
+      cluster:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        destination-namespace: confluent
+        source-path: overlays/confluent/cluster
+
