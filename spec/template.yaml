@@ -10,6 +10,7 @@ spec:
         parameters:
         - name: rate
         - name: duration
+        - name: path
       resource:
         action: apply
         manifest: |
@@ -32,7 +33,7 @@ spec:
               };
           
               export default function () {
-                http.get('http://dummy-nginx.veri.svc');
+                http.get('{{inputs.parameters.path}}');
               }
           kind: ConfigMap
           metadata:
@@ -234,6 +235,7 @@ spec:
     - {name: duration, value: 180}
     - {name: limit_cpu, value: 100m}
     - {name: limit_memory, value: 128Mi}
+    - {name: path, value: http://dummy-nginx.veri.svc}
 
   templates:
     - name: deploy
@@ -278,7 +280,11 @@ spec:
           templateRef: {name: wait, template: wait-fluentbit}
 
         - name: config-k6
-          arguments: {parameters: [{name: rate, value: "{{workflow.parameters.rate}}"}, {name: duration, value: "{{workflow.parameters.duration}}"}]}
+          arguments:
+            parameters:
+            - {name: rate, value: "{{workflow.parameters.rate}}"}
+            - {name: duration, value: "{{workflow.parameters.duration}}"}
+            - {name: path, value: "{{workflow.parameters.path}}"}
           templateRef: {name: k6, template: config-k6}
 
         - name: apply-k6
@@ -339,6 +345,7 @@ spec:
     - {name: duration, value: 180}
     - {name: limit_cpu, value: 100m}
     - {name: limit_memory, value: 128Mi}
+    - {name: path, value: http://dummy-nginx.veri.svc}
 
   templates:
     - name: deploy
@@ -366,7 +373,11 @@ spec:
           templateRef: {name: wait, template: wait-fluentbit}
 
         - name: config-k6
-          arguments: {parameters: [{name: rate, value: "{{workflow.parameters.rate}}"}, {name: duration, value: "{{workflow.parameters.duration}}"}]}
+          arguments:
+            parameters: 
+            - {name: rate, value: "{{workflow.parameters.rate}}"}
+            - {name: duration, value: "{{workflow.parameters.duration}}"} 
+            - {name: path, value: "{{workflow.parameters.path}}"}
           templateRef: {name: k6, template: config-k6}
 
         - name: apply-k6
@@ -422,6 +433,7 @@ spec:
     - {name: duration, value: 180}
     - {name: limit_cpu, value: 100m}
     - {name: limit_memory, value: 128Mi}
+    - {name: path, value: http://dummy-nginx.veri.svc}
   templates:
     - name: deploy
       dag:
@@ -449,7 +461,11 @@ spec:
           templateRef: {name: wait, template: wait-fluentd-ds}
 
         - name: config-k6
-          arguments: {parameters: [{name: rate, value: "{{workflow.parameters.rate}}"}, {name: duration, value: "{{workflow.parameters.duration}}"}]}
+          arguments:
+            parameters: 
+            - {name: rate, value: "{{workflow.parameters.rate}}"}
+            - {name: duration, value: "{{workflow.parameters.duration}}"} 
+            - {name: path, value: "{{workflow.parameters.path}}"}
           templateRef: {name: k6, template: config-k6}
 
         - name: apply-k6

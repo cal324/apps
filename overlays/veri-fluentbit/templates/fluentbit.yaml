@@ -32,4 +32,4 @@ spec:
     syncOptions: 
     automated:
       prune: true
-      selfHeal: true
+      selfHeal: false

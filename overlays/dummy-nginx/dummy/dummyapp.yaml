@@ -65,11 +65,21 @@ data:
     server {
       listen     80;
       server_tokens on;
+
+      location /container {
+        alias   /usr/share/nginx/html;
+        index  index.html index.htm;
+        access_log /dev/stdout my_custom_format;
+        error_log /var/log/nginx/error.log warn;
+      }
+
       location / {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
         access_log /var/log/nginx/access.log my_custom_format;
         error_log /dev/stderr warn;
       }
+
     }
+
 

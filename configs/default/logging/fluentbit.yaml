@@ -65,6 +65,11 @@ config:
 
   filters: |
     [FILTER]
+        Name grep
+        Match kube.*
+        Exclude log container
+
+    [FILTER]
         Name kubernetes
         Match kube.*
         Merge_Log On

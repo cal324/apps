@@ -192,7 +192,7 @@ values:
   - veri-fluentd:
       common:
         syncPolicy-automated-prune: true
-        syncPolicy-automated-selfHeal: true
+        syncPolicy-automated-selfHeal: false
         path: overlays/veri-fluentd
 
       fluentd:
@@ -206,7 +206,7 @@ values:
   - veri-fluentbit:
       common:
         syncPolicy-automated-prune: true
-        syncPolicy-automated-selfHeal: true
+        syncPolicy-automated-selfHeal: false
         path: overlays/veri-fluentbit
 
       fluentbit:
