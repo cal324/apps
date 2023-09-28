@@ -11,7 +11,7 @@ metadata:
 spec:
   destination:
     name: "{{ .Values.destination.name }}"
-    namespace: kafka
+    namespace: confluent
   project: "{{ .Values.project }}"
   sources:
   - repoURL: https://strimzi.io/charts/

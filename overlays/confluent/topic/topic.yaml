@@ -8,3 +8,14 @@ spec:
   partitionCount: 1
   configs:
     cleanup.policy: "compact"
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: KafkaTopic
+metadata:
+  name: avro-topic
+  namespace: confluent
+spec:
+  replicas: 2
+  partitionCount: 1
+  configs:
+    cleanup.policy: "compact"

@@ -69,7 +69,7 @@ data:
       location /container {
         alias   /usr/share/nginx/html;
         index  index.html index.htm;
-        access_log /dev/stdout my_custom_format flush=1;
+        access_log /dev/stdout my_custom_format;
         error_log /var/log/nginx/error.log warn;
       }
 

@@ -298,7 +298,7 @@ spec:
 
         - name: sleep-k6-buffer
           dependencies: [sleep-k6]
-          arguments: {parameters: [{name: time, value: 30}]}
+          arguments: {parameters: [{name: time, value: 60}]}
           templateRef: {name: wait, template: sleep}
 
         - name: create-annotation
@@ -391,7 +391,7 @@ spec:
 
         - name: sleep-k6-buffer
           dependencies: [sleep-k6]
-          arguments: {parameters: [{name: time, value: 30}]}
+          arguments: {parameters: [{name: time, value: 60}]}
           templateRef: {name: wait, template: sleep}
 
         - name: create-annotation
@@ -479,7 +479,7 @@ spec:
 
         - name: sleep-k6-buffer
           dependencies: [sleep-k6]
-          arguments: {parameters: [{name: time, value: 30}]}
+          arguments: {parameters: [{name: time, value: 60}]}
           templateRef: {name: wait, template: sleep}
 
         - name: create-annotation
