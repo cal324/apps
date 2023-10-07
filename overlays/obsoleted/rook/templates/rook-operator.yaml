@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://charts.rook.io/release
     chart: rook-ceph
-    targetRevision: v1.12.3
+    targetRevision: v1.12.5
     helm:
       valueFiles:
       - "$values/{{ .Values.values.path }}/rook/rook-operator.yaml"
