@@ -63,10 +63,11 @@ fileConfigs:
       topics my-topic
       format json
       kafka_configs {
-        "bootstrap.servers": "my-cluster-kafka-external-bootstrap.kafka.svc.cluster.local:9094",
+        "bootstrap.servers": "my-cluster-kafka-brokers.confluent.svc.cluster.local:9092",
         "group.id": "discard"
       }
       tag kafka
+      kafka_message_key test
       #<parse>
       #  @type avro
       #  schema_json {"type":"record","name":"sampleRecord","namespace":"com.mycorp.mynamespace","fields":[{"name": "remote", "type": "string"},{"name": "host", "type": "string"},{"name": "user", "type": "string"},{"name": "method", "type":"string"},{"name": "path", "type": "string"},{"name": "code", "type": "string"},{"name": "size", "type": "string"},{"name": "referer", "type": "string"},{"name": "agent", "type": "string"},{"name":"http_x_forwarded_for", "type": "string"},{"name": "x_b3_traceid", "type": "string"},{"name": "x_b3_spanid", "type": "string"},{"name":"x_b3_parentspanid", "type": "string"},{"name": "x_b3_sampled", "type": "string"}]}
@@ -78,10 +79,11 @@ fileConfigs:
       @type rdkafka_group
       topics avro-topic
       kafka_configs {
-        "bootstrap.servers": "my-cluster-kafka-external-bootstrap.kafka.svc.cluster.local:9094",
+        "bootstrap.servers": "my-cluster-kafka-brokers.confluent.svc.cluster.local:9092",
         "group.id": "avro-discard"
       }
       tag kafka
+      kafka_message_key test
       <parse>
         @type avro
         schema_json {"type":"record","name":"sampleRecord","namespace":"com.mycorp.mynamespace","fields":[{"name": "remote", "type": "string"},{"name": "host", "type": "string"},{"name": "user", "type": "string"},{"name": "method", "type":"string"},{"name": "path", "type": "string"},{"name": "code", "type": "string"},{"name": "size", "type": "string"},{"name": "referer", "type": "string"},{"name": "agent", "type": "string"},{"name":"http_x_forwarded_for", "type": "string"},{"name": "x_b3_traceid", "type": "string"},{"name": "x_b3_spanid", "type": "string"},{"name":"x_b3_parentspanid", "type": "string"},{"name": "x_b3_sampled", "type": "string"}]}

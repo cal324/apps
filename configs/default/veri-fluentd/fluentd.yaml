@@ -105,7 +105,7 @@ fileConfigs:
       @type copy
       <store>
         @type rdkafka2
-        brokers "my-cluster-kafka-external-bootstrap.kafka.svc.cluster.local:9094"
+        brokers "my-cluster-kafka-brokers.confluent.svc.cluster.local:9094"
         topic_key my-topic
         default_topic my-topic
         flush_interval 1s

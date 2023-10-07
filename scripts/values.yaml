@@ -282,20 +282,20 @@ values:
       kafka:
         type: helm
         metadata-annotations-sync-wave: 2
-        destination-namespace: kafka
+        destination-namespace: confluent
         source-repoURL: https://strimzi.io/charts/
         source-chart: strimzi-kafka-operator
 
       cluster:
         type: kustomization
         metadata-annotations-sync-wave: 3
-        destination-namespace: kafka
+        destination-namespace: confluent
         source-path: overlays/kafka/cluster
 
       topic:
         type: kustomization
         metadata-annotations-sync-wave: 4
-        destination-namespace: kafka
+        destination-namespace: confluent
         source-path: overlays/kafka/topic
 
   - confluent:
@@ -322,4 +322,10 @@ values:
         metadata-annotations-sync-wave: 3
         destination-namespace: confluent
         source-path: overlays/confluent/cluster
+
+      topic:
+        type: kustomization
+        metadata-annotations-sync-wave: 4
+        destination-namespace: confluent
+        source-path: overlays/confluent/topic
 
