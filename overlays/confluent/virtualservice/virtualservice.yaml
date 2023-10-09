@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: confluent
+  namespace: default
+spec:
+  gateways:
+    - app-gateway
+  hosts:
+    - "*"
+  http:
+    - match:
+        - headers:
+            host:
+              prefix: az-controlcenter
+      name: prometheus
+      route:
+        - destination:
+            host: controlcenter.confluent.svc.cluster.local
+            port:
+              number: 9021

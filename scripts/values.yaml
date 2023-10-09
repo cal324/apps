@@ -329,3 +329,8 @@ values:
         destination-namespace: confluent
         source-path: overlays/confluent/topic
 
+      virtualservice:
+        type: kustomization
+        metadata-annotations-sync-wave: 4
+        source-path: overlays/confluent/virtualservice
+
