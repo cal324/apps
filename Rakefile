@@ -88,6 +88,7 @@ def replace(name)
   top_level_tasks = Rake.application.top_level_tasks[0]
   config = $config['configs'].select{|config|config['name'] == top_level_tasks}[0]
   config = $config['configs'].select{|config|config['name'] == 'default'}[0] if config == nil
+  config = config.dup
   if config['name'] == 'default'
     config['targetrevision'] = `git branch --show-current`
     config['values_targetrevision'] = `git branch --show-current`
