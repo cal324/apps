@@ -19,7 +19,8 @@ end
 task 'argoworkflow' do
   `kustomize build base/argoworkflow/ | kubectl apply -f -`
   sleep 5
-  `kubectl apply -f spec/template.yaml `
+  `kubectl apply -f spec/template.yaml`
+  `kubectl apply -f spec/dash-mini.yaml`
 end
 
 task 'argocd' do
