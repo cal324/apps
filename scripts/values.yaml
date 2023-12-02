@@ -334,3 +334,32 @@ values:
         metadata-annotations-sync-wave: 4
         source-path: overlays/confluent/virtualservice
 
+  - harbor:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/harbor
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/harbor/namespace
+
+      harbor:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: harbor
+        source-repoURL: https://helm.goharbor.io
+        source-chart: harbor
+
+      project:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        destination-namespace: harbor
+        source-path: overlays/harbor/project
+
+      virtualservice:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        source-path: overlays/harbor/virtualservice
+

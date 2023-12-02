@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: registry
+  namespace: default
+spec:
+  gateways:
+  - app-gateway
+  hosts:
+  - '*'
+  tls:
+  - match:
+      - port: 443
+        sniHosts:
+          - az-harbor
+    route:
+    - destination:
+        host: harbor.harbor.svc.cluster.local
+        port:
+          number: 443

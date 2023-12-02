@@ -1,0 +1,12 @@
+expose:
+  type: nodePort
+  tls:
+    auto:
+      commonName: 172.16.0.4
+harborAdminPassword: admin
+persistence:
+  enabled: true
+notary:
+  enabled: false
+externalURL:
+  https://172.16.0.4:30003
