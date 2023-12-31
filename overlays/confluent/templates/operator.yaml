@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://packages.confluent.io/helm
     chart: confluent-for-kubernetes
-    targetRevision: 0.824.33
+    targetRevision: 0.824.40
     helm:
       valueFiles:
       - "$values/{{ .Values.values.path }}/confluent/operator.yaml"
