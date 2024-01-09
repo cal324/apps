@@ -19,4 +19,4 @@ packages:
 - name: kubernetes/kubectl@v1.29.0
 - name: mikefarah/yq@v4.40.5
 - name: stedolan/jq@jq-1.6
-- name: stern/stern@v1.27.0
+- name: stern/stern@v1.28.0
