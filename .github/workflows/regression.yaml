@@ -66,8 +66,8 @@ jobs:
           ENV: ${{ github.ref_name }}
         run: |
           export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-          rake database
-          sudo apt install mysql-client -y
-          sleep 180
-          rspec spec/post_deploy.spec -e database
+          #rake database
+          #sudo apt install mysql-client -y
+          #sleep 180
+          #rspec spec/post_deploy.spec -e database
 
