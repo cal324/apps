@@ -17,6 +17,6 @@ packages:
 - name: kubernetes-sigs/kind@v0.21.0
 - name: kubernetes-sigs/kustomize@kustomize/v5.3.0
 - name: kubernetes/kubectl@v1.29.1
-- name: mikefarah/yq@v4.40.5
+- name: mikefarah/yq@v4.40.7
 - name: stedolan/jq@jq-1.6
 - name: stern/stern@v1.28.0
