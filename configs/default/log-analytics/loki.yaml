@@ -19,11 +19,11 @@ monitoring:
     labels: 
       release: monitoring-prometheus
 write:
-  replicas: 1
+  replicas: 0
 read:
-  replicas: 1
+  replicas: 0
 backend:
-  replicas: 1
+  replicas: 0
 singleBinary:
   replicas: 1
   autoscaling:
