@@ -18,7 +18,7 @@ grafana:
      orgId: 1
      uid: loki
      type: loki
-     url: http://loki-gateway.log-analytics.svc
+     url: http://log-analytics-loki-gateway.log-analytics.svc
    - name: jaeger
      access: browser
      basicAuth: false
