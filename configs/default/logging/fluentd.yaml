@@ -95,7 +95,7 @@ fileConfigs:
       @type copy
       <store>
         @type loki
-        url http://loki-gateway.log-analytics.svc
+        url http://log-analytics-loki-gateway.log-analytics.svc
         extract_kubernetes_labels true
         remove_keys kubernetes,stream,time,_p
         drop_single_key true
