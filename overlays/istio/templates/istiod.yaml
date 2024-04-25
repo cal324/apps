@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://istio-release.storage.googleapis.com/charts
     chart: istiod
-    targetRevision: 1.21.1
+    targetRevision: 1.21.2
     helm:
       valueFiles:
       - "$values/{{ .Values.values.path }}/istio/istiod.yaml"
