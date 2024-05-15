@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://strimzi.io/charts/
     chart: strimzi-kafka-operator
-    targetRevision: 0.40.0
+    targetRevision: 0.41.0
     helm:
       valueFiles:
       - "$values/{{ .Values.values.path }}/kafka/kafka.yaml"
