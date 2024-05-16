@@ -26,6 +26,9 @@ grafana:
      uid: jaeger
      type: jaeger
      url: simplest-query.tracing.svc.cluster.local:16686
+  grafana.ini:
+    feature_toggles:
+      enable: "autoMigrateOldPanels"
 prometheus:
   prometheusSpec:
     storageSpec: 
