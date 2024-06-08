@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://grafana.github.io/helm-charts
     chart: loki
-    targetRevision: 6.6.2
+    targetRevision: 6.6.3
     helm:
       valueFiles:
       - "$values/{{ .Values.values.path }}/log-analytics/loki.yaml"
