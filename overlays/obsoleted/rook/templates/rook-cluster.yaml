@@ -16,7 +16,7 @@ spec:
   sources:
   - repoURL: https://charts.rook.io/release
     chart: rook-ceph-cluster
-    targetRevision: v1.14.6
+    targetRevision: v1.14.7
     helm:
       valueFiles:
       - "$values/{{ .Values.values.path }}/rook/rook-cluster.yaml"
