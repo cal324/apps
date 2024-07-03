@@ -10,7 +10,7 @@ registries:
 - type: standard
   ref: v4.199.0 # renovate: depName=aquaproj/aqua-registry
 packages:
-- name: argoproj/argo-cd@v2.11.3
+- name: argoproj/argo-cd@v2.11.4
 - name: helm/helm@v3.15.2
 - name: kubernetes-sigs/cluster-api@v1.7.3
 - name: cli/cli@v2.52.0
