@@ -6,20 +6,24 @@
   ],
   "enabledManagers": [
     "argocd",
+    "helmfile",
     "kustomize",
-    "regex"
+    "regex",
+    "bundler"
   ],
   "argocd": {
-    "fileMatch": [
-      "\\.yaml$"
-    ]
+    "fileMatch": ["\\.yaml$"]
   },
-  "baseBranches": ["develop"],
+  "helmfile": {
+    "fileMatch": ["(^|/)helmfile\\.yaml$"]
+  },
+  "bundler": {
+    "enabled": true,
+    "rangeStrategy": "bump"
+  },
   "regexManagers": [
     {
-      "fileMatch": [
-        "(^|/)kustomization\\.ya?ml$"
-      ],
+      "fileMatch": ["(^|/)kustomization\\.ya?ml$"],
       "matchStrings": [
         "https://raw\\.githubusercontent\\.com/(?<depName>[^/]+/[^/]+)/(?<currentValue>[^/]+)/.*",
         "https://github\\.com/(?<depName>[^/]+/[^/]+)/releases/download/(?<currentValue>[^/]+)/.*"

@@ -1,0 +1,9 @@
+repositories:
+  - name: gitea
+    url: https://dl.gitea.com/charts/
+
+releases:
+  - name: gitea
+    namespace: gitea
+    chart: gitea/gitea
+    version: 10.4.1

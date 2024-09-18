@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-gitea-repos-job
+  namespace: gitea
+spec:
+  template:
+    metadata:
+      name: create-gitea-repos-job
+    spec:
+      initContainers:
+      - name: curl
+        image: curlimages/curl
+        command:
+         - "sh"
+         - "-c"
+         - "curl -X 'POST' 'http://gitea-http.gitea.svc:3000/api/v1/orgs' -H 'accept: application/json' -H 'authorization: Basic Z2l0ZWFfYWRtaW46cjhzQThDUEhEOSFidDZk' -H 'Content-Type: application/json' -d '{\"description\": \"string\",\"full_name\": \"string\",\"location\": \"string\",\"repo_admin_change_team_access\": true,\"username\": \"test\",\"visibility\": \"public\",\"website\": \"http://repository-gitea-http.gitea.svc:3000\"}' -v"
+      - name: curl2
+        image: curlimages/curl
+        command:
+         - "sh"
+         - "-c"
+         - "curl -X 'POST' 'http://gitea-http.gitea.svc:3000/api/v1/orgs/test/repos' -H 'accept: application/json' -H 'authorization: Basic Z2l0ZWFfYWRtaW46cjhzQThDUEhEOSFidDZk' -H 'Content-Type: application/json' -d '{\"auto_init\": true,\"default_branch\": \"main\",\"description\": \"string\",\"name\": \"aaa\",\"private\": true,\"trust_model\": \"default\"}' -v"
+      containers:
+        - name: job-done
+          image: busybox
+          command: ['sh', '-c', 'echo "batch-01 and batch-02 completed"']
+      restartPolicy: Never
+
+

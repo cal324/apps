@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: <%= config['group'] %>-<%= config['app_name'] %>
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '<%= config['param']["metadata-annotations-sync-wave"] %>'
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: "<%= '{{' %> <%= config['global']['destination-name'] %> <%= '}}' %>"
+<% if config['param'].key? 'destination-namespace' -%>
+    namespace: <%= config['param']['destination-namespace'] %>
+<% end -%>
+  project: "<%= '{{' %> <%= config['global']['project'] %> <%= '}}' %>"
+<% if config['param']['type'] == 'helm' -%>
+  sources:
+  - repoURL: <%= config['param']['source-repoURL'] %>
+    chart: <%= config['param']['source-chart'] %>
+    targetRevision: <%= config['param']['source-targetRevision'] %>
+    helm:
+      valueFiles:
+        - $values/<%= '{{' %> <%= config['global']['values-path'] %> <%= '}}' %>/<%= config['group'] %>/<%= config['app_name'] %>.yaml
+<% if config['param']['setResource'] -%>
+      parameters:
+        - name: resources.limits.cpu
+          value: "{{.Values.resources.limits.cpu}}"
+        - name: resources.limits.memory
+          value: "{{.Values.resources.limits.memory}}"
+<% end -%>
+  - repoURL: "<%= '{{' %> <%= config['global']['values-repoURL'] %> <%= '}}' %>"
+    targetRevision: "<%= '{{' %> <%= config['global']['values-values-targetRevision'] %> <%= '}}' %>"
+    ref: values
+<% elsif config['param']['type'] == 'kustomization' -%>
+  source:
+    repoURL: "<%= '{{' %> <%= config['global']['source-repoURL'] %> <%= '}}' %>"
+    path: <%= config['param']['source-path'] %>
+    targetRevision: "<%= '{{' %> <%= config['global']['source-targetRevision'] %> <%= '}}' %>"
+<% end -%>
+  syncPolicy:
+    syncOptions:
+<% if config['param'].key? 'syncPolicy-syncOptions-CreateNamespace' -%>
+    - CreateNamespace=<%= config['param']['syncPolicy-syncOptions-CreateNamespace'] %>
+<% end -%>
+<% if config['param'].key? 'syncPolicy-syncOptions-Replace' -%>
+    - Replace=<%= config['param']['syncPolicy-syncOptions-Replace'] %>
+<% end -%>
+<% if config['param'].key? 'syncPolicy-syncOptions-ServerSideApply' -%>
+    - ServerSideApply=<%= config['param']['syncPolicy-syncOptions-ServerSideApply'] %>
+<% end -%>
+<% if config['param'].key? 'syncPolicy-directory-recurse' -%>
+    directory:
+      recurse: <%= config['param']['syncPolicy-directory-recurse'] %>
+<% end -%>
+    automated:
+      prune: <%= config['common']['syncPolicy-automated-prune'] %>
+      selfHeal: <%= config['common']['syncPolicy-automated-selfHeal'] %>

@@ -1,0 +1,365 @@
+global:
+  project: .Values.project
+  destination-name: .Values.destination.name
+  destination-kubernetes: .Values.destination.kubernetes
+  source-targetRevision: .Values.source.targetRevision
+  source-repoURL: .Values.source.repoURL
+  values-values-targetRevision: .Values.values.targetRevision
+  values-repoURL: .Values.values.repoURL
+  values-path: .Values.values.path
+
+values:
+  - istio:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/istio
+
+      base:
+        type: helm
+        metadata-annotations-sync-wave: 1
+        destination-namespace: istio-system
+        source-repoURL: https://istio-release.storage.googleapis.com/charts
+        source-chart: base
+        syncPolicy-syncOptions-CreateNamespace: true
+
+      istiod:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: istio-system
+        source-repoURL: https://istio-release.storage.googleapis.com/charts
+        source-chart: istiod
+
+      ingress:
+        type: helm
+        metadata-annotations-sync-wave: 3
+        destination-namespace: istio-ingress
+        source-repoURL: https://istio-release.storage.googleapis.com/charts
+        source-chart: gateway
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/istio/namespace
+
+      gateway:
+        type: kustomization
+        metadata-annotations-sync-wave: 4
+        source-path: overlays/istio/gateway
+
+  - monitoring:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/monitoring
+
+      prometheus:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: monitoring
+        source-repoURL: https://prometheus-community.github.io/helm-charts
+        source-chart: kube-prometheus-stack
+        syncPolicy-syncOptions-ServerSideApply: true
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/monitoring/namespace
+
+      virtualservice:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        source-path: overlays/monitoring/virtualservice
+
+      monitor:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        source-path: overlays/monitoring/monitor
+
+  - log-analytics:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/log-analytics
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/log-analytics/namespace
+
+      loki:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: log-analytics
+        source-repoURL: https://grafana.github.io/helm-charts
+        source-chart: loki
+        syncPolicy-syncOptions-ServerSideApply: true
+
+  - tracing:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/tracing
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/tracing/namespace
+
+      cert-manager:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: tracing
+        source-repoURL: https://charts.jetstack.io
+        source-chart: cert-manager
+        syncPolicy-syncOptions-ServerSideApply: true
+
+      jaeger-operator:
+        type: helm
+        metadata-annotations-sync-wave: 3
+        destination-namespace: tracing
+        source-repoURL: https://jaegertracing.github.io/helm-charts
+        source-chart: jaeger-operator
+        syncPolicy-syncOptions-ServerSideApply: true
+
+      jaeger-simplest:
+        type: kustomization
+        metadata-annotations-sync-wave: 4
+        source-path: overlays/tracing/jaeger-simplest
+
+      kiali-operator:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: kiali-operator
+        source-repoURL: https://kiali.org/helm-charts
+        source-chart: kiali-operator
+        syncPolicy-syncOptions-ServerSideApply: true
+        syncPolicy-syncOptions-CreateNamespace: true
+
+      kiali:
+        type: kustomization
+        destination-namespace: istio-system
+        metadata-annotations-sync-wave: 3
+        source-path: overlays/tracing/kiali
+
+      virtualservice:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        source-path: overlays/tracing/virtualservice
+
+  - logging:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/logging
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/logging/namespace
+
+      fluentd:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: logging
+        source-repoURL: https://fluent.github.io/helm-charts
+        source-chart: fluentd
+
+      fluentbit:
+        type: helm
+        metadata-annotations-sync-wave: 3
+        destination-namespace: logging
+        source-repoURL: https://fluent.github.io/helm-charts
+        source-chart: fluent-bit
+
+  - dummy-nginx:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/dummy-nginx
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/dummy-nginx/namespace
+
+      dummy:
+        type: kustomization
+        metadata-annotations-sync-wave: 2
+        destination-namespace: veri
+        source-path: overlays/dummy-nginx/dummy
+
+  - veri-fluentd:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: false
+        path: overlays/veri-fluentd
+
+      fluentd:
+        type: helm
+        metadata-annotations-sync-wave: 1
+        destination-namespace: veri
+        source-repoURL: https://fluent.github.io/helm-charts
+        source-chart: fluentd
+        setResource: true
+
+  - veri-fluentbit:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: false
+        path: overlays/veri-fluentbit
+
+      fluentbit:
+        type: helm
+        metadata-annotations-sync-wave: 1
+        destination-namespace: veri
+        source-repoURL: https://fluent.github.io/helm-charts
+        source-chart: fluent-bit
+        setResource: true
+
+  - kafka-discard:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/kafka-discard
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/kafka-discard/namespace
+
+      discard:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: kafka-discard
+        source-repoURL: https://fluent.github.io/helm-charts
+        source-chart: fluentd
+
+  - database:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/database
+
+      tidb-crd:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/database/crd
+        syncPolicy-syncOptions-ServerSideApply: true
+
+      tidb-operator:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: tidb-admin
+        source-repoURL: https://charts.pingcap.org
+        source-chart: tidb-operator
+        syncPolicy-syncOptions-CreateNamespace: true
+
+      tidb-cluster:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        destination-namespace: tidb
+        source-path: overlays/database/cluster
+        syncPolicy-syncOptions-CreateNamespace: true
+
+      nodeport:
+        type: kustomization
+        metadata-annotations-sync-wave: 4
+        destination-namespace: tidb
+        source-path: overlays/database/nodeport
+
+  - kafka:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/kafka
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/kafka/namespace
+
+      kafka:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: confluent
+        source-repoURL: https://strimzi.io/charts/
+        source-chart: strimzi-kafka-operator
+
+      cluster:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        destination-namespace: confluent
+        source-path: overlays/kafka/cluster
+
+      topic:
+        type: kustomization
+        metadata-annotations-sync-wave: 4
+        destination-namespace: confluent
+        source-path: overlays/kafka/topic
+
+  - confluent:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/confluent
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/confluent/namespace
+
+      operator:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: confluent
+        source-repoURL: https://packages.confluent.io/helm
+        source-chart: confluent-for-kubernetes
+        syncPolicy-syncOptions-ServerSideApply: true
+
+      cluster:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        destination-namespace: confluent
+        source-path: overlays/confluent/cluster
+
+      topic:
+        type: kustomization
+        metadata-annotations-sync-wave: 4
+        destination-namespace: confluent
+        source-path: overlays/confluent/topic
+
+      virtualservice:
+        type: kustomization
+        metadata-annotations-sync-wave: 4
+        source-path: overlays/confluent/virtualservice
+
+  - harbor:
+      common:
+        syncPolicy-automated-prune: true
+        syncPolicy-automated-selfHeal: true
+        path: overlays/harbor
+
+      namespace:
+        type: kustomization
+        metadata-annotations-sync-wave: 1
+        source-path: overlays/harbor/namespace
+
+      harbor:
+        type: helm
+        metadata-annotations-sync-wave: 2
+        destination-namespace: harbor
+        source-repoURL: https://helm.goharbor.io
+        source-chart: harbor
+
+      project:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        destination-namespace: harbor
+        source-path: overlays/harbor/project
+
+      virtualservice:
+        type: kustomization
+        metadata-annotations-sync-wave: 3
+        source-path: overlays/harbor/virtualservice
+
