@@ -1,4 +1,3 @@
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -19,17 +18,17 @@ spec:
     targetRevision: 0.47.9
     helm:
       valueFiles:
-      - "$values/{{ .Values.values.path }}/veri-fluentbit/fluentbit.yaml"
+        - $values/{{ .Values.values.path }}/veri-fluentbit/fluentbit.yaml
       parameters:
-      - name: resources.limits.cpu
-        value: "{{.Values.resources.limits.cpu}}"
-      - name: resources.limits.memory
-        value: "{{.Values.resources.limits.memory}}"
+        - name: resources.limits.cpu
+          value: "{{.Values.resources.limits.cpu}}"
+        - name: resources.limits.memory
+          value: "{{.Values.resources.limits.memory}}"
   - repoURL: "{{ .Values.values.repoURL }}"
     targetRevision: "{{ .Values.values.targetRevision }}"
     ref: values
   syncPolicy:
-    syncOptions: 
+    syncOptions:
     automated:
       prune: true
       selfHeal: false
