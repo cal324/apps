@@ -3,12 +3,10 @@ name: regression
 on:
   push:
     paths:
-      - 'base/**'
-      - 'overlays/**'
-      - 'scripts/**'
-      - 'spec/**'
-      - '.github/workflows/**'
-      - 'Rakefile'
+      - 'dummy'
+        #- 'overlays/**'
+        #- 'spec/**'
+        # - '.github/workflows/**'
   workflow_dispatch:
 
 concurrency:
