@@ -7,7 +7,6 @@ $configs['development'] = {
   repourl: 'https://github.com/cal324/apps.git',
   values_targetrevision: 'develop',
   values_repourl: 'https://github.com/cal324/apps.git',
-  values_path: 'configs/development',
 }
 
 namespace :development do
