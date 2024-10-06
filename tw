@@ -29,7 +29,8 @@ end
 
 def create_template(overlay, env)
   $configs[env][:name] = overlay
-  $configs[env][:values_path] = File.exist?("configs/default/#{overlay}") ? "configs/default" : "configs/#{env}"
+  #$configs[env][:values_path] = File.exist?("configs/default/#{overlay}") ? "configs/default" : "configs/#{env}"
+  $configs[env][:values_path] = File.exist?("configs/#{env}/#{overlay}") ? "configs/#{env}" : "configs/default"
   template("base/app_of_apps/applications.tt", "/tmp/#{overlay}.yaml", $configs[env])
 end
 
