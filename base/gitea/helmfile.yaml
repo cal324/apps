@@ -6,4 +6,4 @@ releases:
   - name: gitea
     namespace: gitea
     chart: gitea/gitea
-    version: 10.4.1
+    version: 10.5.0
