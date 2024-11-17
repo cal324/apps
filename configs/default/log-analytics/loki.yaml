@@ -14,6 +14,12 @@ loki:
         index:
           prefix: index_
           period: 24h
+  memcached:
+    chunk_cache:
+      memory_limit: 40
+    results_cache:
+      memory_limit: 10
+
 monitoring:
   serviceMonitor:
     labels: 
@@ -30,8 +36,3 @@ singleBinary:
     enabled: true
   persistence:
      size: 50Gi
-memcached:
-  chunk_cache:
-    memory_limit: 40
-  results_cache:
-    memory_limit: 10
