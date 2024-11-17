@@ -32,6 +32,6 @@ singleBinary:
      size: 50Gi
 memcached:
   chunk_cache:
-    enabled: false
+    memory_limit: 40
   results_cache:
-    enabled: false
+    memory_limit: 10
