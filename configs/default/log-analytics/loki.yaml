@@ -33,3 +33,5 @@ singleBinary:
 memcached:
   chunk_cache:
     enabled: false
+  results_cache:
+    enabled: false
