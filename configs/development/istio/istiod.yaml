@@ -3,6 +3,9 @@ global:
     resources:
       requests:
         cpu: 10m
+pilot:
+  autoscaleEnabled: false
+  replicaCount: 1
 meshConfig:
   defaultConfig:
     tracing:
