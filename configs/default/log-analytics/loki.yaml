@@ -30,3 +30,6 @@ singleBinary:
     enabled: true
   persistence:
      size: 50Gi
+  memcached:
+    chunk_cache:
+      enabled: false
