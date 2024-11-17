@@ -14,11 +14,11 @@ loki:
         index:
           prefix: index_
           period: 24h
-  memcached:
-    chunk_cache:
-      memory_limit: 40
-    results_cache:
-      memory_limit: 10
+
+chunksCache:
+  allocatedMemory: 400
+resultsCache:
+  allocatedMemory: 100
 
 monitoring:
   serviceMonitor:
