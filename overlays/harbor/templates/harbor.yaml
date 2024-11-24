@@ -15,7 +15,7 @@ spec:
   sources:
   - repoURL: https://helm.goharbor.io
     chart: harbor
-    targetRevision: 1.15.1
+    targetRevision: 1.16.0
     helm:
       valueFiles:
         - $values/{{ .Values.values.path }}/harbor/harbor.yaml
