@@ -11,7 +11,7 @@ rules:
   resources: ["k6s"]
   verbs: ["get","create","delete","patch"]
 - apiGroups: ["argoproj.io"]
-  resources: ["workflows","workflowtaskresults"]
+  resources: ["workflows","workflowtaskresults","applications"]
   verbs: ["get","create","patch","list"]
 - apiGroups: [""]
   resources: ["pods"]
