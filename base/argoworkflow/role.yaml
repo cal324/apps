@@ -12,7 +12,7 @@ rules:
   verbs: ["get","create","delete","patch"]
 - apiGroups: ["argoproj.io"]
   resources: ["workflows","workflowtaskresults","applications"]
-  verbs: ["get","create","patch","list"]
+  verbs: ["get","create","patch","list","watch"]
 - apiGroups: [""]
   resources: ["pods"]
   verbs: ["get","create","patch"]
