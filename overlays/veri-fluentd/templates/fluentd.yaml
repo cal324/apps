@@ -15,7 +15,7 @@ spec:
   sources:
   - repoURL: https://fluent.github.io/helm-charts
     chart: fluentd
-    targetRevision: 0.5.2
+    targetRevision: 0.5.3
     helm:
       valueFiles:
         - $values/{{ .Values.values.path }}/veri-fluentd/fluentd.yaml
